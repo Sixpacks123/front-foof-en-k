@@ -15,6 +15,17 @@ export interface BaseEntity {
 }
 
 /**
+ * Info banner data from Strapi
+ */
+export interface Info extends BaseEntity {
+  title: string
+  message: string
+  description?: string
+  type: 'info' | 'warning' | 'error' | 'success'
+  isActive: boolean
+}
+
+/**
  * Generic API response wrapper
  * @template T The data type being returned
  */
@@ -53,35 +64,56 @@ export interface Category extends BaseEntity {
   image?: MediaFile
 }
 
+/**
+ * Menu entity from Strapi
+ */
 export interface Menu extends BaseEntity {
   name: string
-  description: string
+  description: string | null
   isActive: boolean
-  image?: MediaFile
-  products: Product[]
+  products?: Product[]
 }
 
-export interface Ingredient {
-  id: number
+/**
+ * Product category
+ */
+export interface Category extends BaseEntity {
   name: string
-  isAllergen?: boolean
+  description: string | null
 }
 
+/**
+ * Product ingredient
+ */
+export interface Ingredient extends BaseEntity {
+  name: string
+  isAllergen: boolean
+}
+
+/**
+ * Product image
+ */
+export interface ProductImage extends BaseEntity {
+  url: string
+  alternativeText?: string
+  caption?: string
+  width?: number
+  height?: number
+}
+
+/**
+ * Product entity from Strapi
+ */
 export interface Product extends BaseEntity {
   name: string
-  description?: string | null
+  description: string | null
   price: number
-  available?: boolean | null
-  slug: string
-  isVegetarian?: boolean | null
-  isVegan?: boolean | null
-  isGlutenFree?: boolean | null
-  isNew?: boolean | null
-  isPopular?: boolean | null
-  preparationTime?: number | null
-  images?: MediaFile[]
+  available: boolean
+  isVegetarian?: boolean
+  isVegan?: boolean
+  category?: Category
   ingredients?: Ingredient[]
-  category?: Pick<Category, 'id' | 'name' | 'slug'>
+  images?: ProductImage[]
 }
 
 // Event types
@@ -180,3 +212,57 @@ export interface ProductFilters {
   isNew?: boolean
   isPopular?: boolean
 }
+
+// Menu specific filter types
+export interface MenuFilters {
+  vegetarian: boolean
+  vegan: boolean
+  glutenFree: boolean
+  available: boolean
+  isNew: boolean
+  isPopular: boolean
+}
+
+// Badge types
+export interface ProductBadge {
+  label: string
+  color: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
+}
+
+// =====================================
+// BANNER/ALERT TYPES
+// =====================================
+
+/**
+ * Single alert item from Strapi
+ */
+export interface Alert extends BaseEntity {
+  title: string
+  description: string
+  icon: string
+  color: 'error' | 'warning' | 'info' | 'success'
+  isActive: boolean
+}
+
+/**
+ * Banner configuration from Strapi
+ */
+export interface Banner extends BaseEntity {
+  title: string
+  icon: string
+  color: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
+  isActive: boolean
+  alerts?: Alert[]
+}
+
+/**
+ * Client-side banner data structure
+ */
+export interface BannerData {
+  icon: string
+  title: string
+  color: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
+  alerts: Alert[]
+}
+
+// =====================================

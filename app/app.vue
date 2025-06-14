@@ -27,6 +27,8 @@ useSeoMeta({
 
 <template>
   <UApp>
+    <AlertBanner />
+
     <AppHeader />
 
     <UMain>

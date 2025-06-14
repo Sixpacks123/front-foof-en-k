@@ -1,16 +1,16 @@
-import type { Product, Category, ProductFilters } from '~/types'
+import type { Product, Category, Menu, MenuFilters, ProductBadge } from '~/types'
 
 /**
- * Enhanced Menu Management Composable
- * @description Provides comprehensive menu and product management with improved maintainability
+ * Consolidated Menu Management Composable
+ * @description Unified composable for menu and product management
  */
 export const useMenu = () => {
   // =====================================
   // DEPENDENCIES
   // =====================================
   
-  const { fetchEntities } = useApi()
-  const { addNotification } = useAppState()
+  const { find } = useStrapi()
+  const toast = useToast()
 
   // =====================================
   // STATE
@@ -20,7 +20,7 @@ export const useMenu = () => {
   const selectedCategory = ref<number | null>(null)
   const showFilters = ref(false)
   const maxPrice = ref(20)
-  const filters = ref<ProductFilters>({
+  const filters = ref<MenuFilters>({
     vegetarian: false,
     vegan: false,
     glutenFree: false,
@@ -40,167 +40,207 @@ export const useMenu = () => {
   const isSearching = ref(false)
 
   // =====================================
-  // DATA FETCHING
+  // DATA FETCHING FUNCTIONS
   // =====================================
   
-  // Fetch products with enhanced error handling
-  const { data: productsResponse, pending: productsPending, refresh: refreshProducts }
-    = useAsyncData('products', () =>
-      fetchEntities<Product>('products', {
-        populate: {
-          category: { fields: ['id', 'name', 'slug'] },
-          ingredients: { fields: ['id', 'name', 'isAllergen'] },
-          images: { fields: ['id', 'url', 'alternativeText', 'width', 'height'] }
+  /**
+   * Fetch menus with products from Strapi
+   */
+  const fetchMenus = async (): Promise<Menu[]> => {
+    try {
+      const response = await find('menus', {
+        filters: {
+          publishedAt: { $notNull: true }
         },
-        cache: true
-      })
-    )
-
-  // Fetch categories with enhanced error handling
-  const { data: categoriesResponse, pending: categoriesPending, refresh: refreshCategories }
-    = useAsyncData('categories', () =>
-      fetchEntities<Category>('categories', {
         populate: {
-          image: { fields: ['id', 'url', 'alternativeText'] }
+          products: {
+            populate: {
+              category: true,
+              ingredients: true,
+              images: true
+            }
+          }
         },
-        cache: true
+        sort: ['isActive:desc', 'createdAt:desc']
       })
-    )
-
-  // =====================================
-  // COMPUTED PROPERTIES
-  // =====================================
-  
-  const products = computed(() => productsResponse.value?.data || [])
-  const categories = computed(() => categoriesResponse.value?.data || [])
-  const pending = computed(() => productsPending.value || categoriesPending.value)
-  
-  const hasError = computed(() =>
-    Boolean(productsResponse.value?.error || categoriesResponse.value?.error)
-  )
-
-  // Enhanced computed properties
-  const activeFiltersCount = computed(() => {
-    let count = 0
-    if (searchQuery.value.trim()) count++
-    if (maxPrice.value < 20) count++
-    if (selectedCategory.value !== null) count++
-    
-    // Count active filter flags
-    Object.values(filters.value).forEach((value) => {
-      if (value) count++
-    })
-    
-    return count
-  })
-
-  const breadcrumbLinks = computed(() => {
-    const links = [
-      { label: 'Accueil', to: '/' },
-      { label: 'Menu', to: '/menus' }
-    ]
-
-    if (selectedCategory.value && categories.value) {
-      const category = categories.value.find(c => c.id === selectedCategory.value)
-      if (category) {
-        links.push({ label: category.name, to: `/menus?category=${category.id}` })
-      }
+      
+      const rawMenus = response?.data || response || []
+      return Array.isArray(rawMenus) ? rawMenus as Menu[] : []
+    } catch (error) {
+      console.error('Error fetching menus:', error)
+      return []
     }
+  }
 
-    return links
-  })
+  /**
+   * Fetch categories from Strapi
+   */
+  const fetchCategories = async (): Promise<Category[]> => {
+    try {
+      const response = await find('categories', {
+        filters: {
+          publishedAt: { $notNull: true }
+        }
+      })
+      
+      const rawCategories = response?.data || response || []
+      return Array.isArray(rawCategories) ? rawCategories as Category[] : []
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+      return []
+    }
+  }
 
-  const filteredProducts = computed(() => {
-    let filtered = [...products.value]
+  // =====================================
+  // UTILITY FUNCTIONS
+  // =====================================
+
+  /**
+   * Filter products based on search query and category
+   */
+  const filterProducts = (products: Product[], filters: {
+    searchQuery: string
+    selectedCategory: number | null
+    maxPrice: number
+  }): Product[] => {
+    let filtered = [...products]
 
     // Filter by category
-    if (selectedCategory.value !== null) {
-      filtered = filtered.filter(product =>
-        product.category?.id === selectedCategory.value
-      )
+    if (filters.selectedCategory !== null) {
+      filtered = filtered.filter(p => p.category?.id === filters.selectedCategory)
     }
 
     // Filter by search query
-    if (searchQuery.value.trim()) {
-      const query = searchQuery.value.toLowerCase().trim()
-      filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(query)
-        || product.description?.toLowerCase().includes(query)
-        || product.ingredients?.some(ingredient =>
-          ingredient.name.toLowerCase().includes(query)
-        )
-      )
+    if (filters.searchQuery.trim()) {
+      const query = filters.searchQuery.toLowerCase().trim()
+      filtered = filtered.filter((p) => {
+        const matchName = p.name.toLowerCase().includes(query)
+        const matchDescription = p.description?.toLowerCase().includes(query) || false
+        const matchCategory = p.category?.name.toLowerCase().includes(query) || false
+        const matchIngredients = p.ingredients?.some(ing =>
+          ing.name.toLowerCase().includes(query)
+        ) || false
+        
+        return matchName || matchDescription || matchCategory || matchIngredients
+      })
     }
 
     // Filter by price
-    if (maxPrice.value < 20) {
-      filtered = filtered.filter(product => product.price <= maxPrice.value)
-    }
-
-    // Apply boolean filters
-    if (filters.value.vegetarian) {
-      filtered = filtered.filter(product => product.isVegetarian)
-    }
-    if (filters.value.vegan) {
-      filtered = filtered.filter(product => product.isVegan)
-    }
-    if (filters.value.glutenFree) {
-      filtered = filtered.filter(product => product.isGlutenFree)
-    }
-    if (filters.value.available) {
-      filtered = filtered.filter(product => product.available !== false)
-    }
-    if (filters.value.isNew) {
-      filtered = filtered.filter(product => product.isNew)
-    }
-    if (filters.value.isPopular) {
-      filtered = filtered.filter(product => product.isPopular)
+    if (filters.maxPrice < 20) {
+      filtered = filtered.filter(p => p.price <= filters.maxPrice)
     }
 
     return filtered
-  })
-
-  const categoriesWithProducts = computed(() => {
-    return categories.value.filter(category =>
-      filteredProducts.value.some(product => product.category?.id === category.id)
-    )
-  })
-
-  const paginatedProducts = computed(() => {
-    const start = (currentPage.value - 1) * itemsPerPage
-    return filteredProducts.value.slice(start, start + itemsPerPage)
-  })
-
-  const totalPages = computed(() => {
-    return Math.ceil(filteredProducts.value.length / itemsPerPage)
-  })
-
-  // =====================================
-  // METHODS
-  // =====================================
-  
-  const refresh = async () => {
-    await Promise.all([refreshProducts(), refreshCategories()])
-    addNotification({
-      title: 'Actualisé',
-      description: 'Les données ont été rechargées',
-      type: 'success'
-    })
   }
+
+  /**
+   * Get product count for a specific category
+   */
+  const getProductCountByCategory = (products: Product[], categoryId: number): number => {
+    return products.filter(p => p.category?.id === categoryId).length
+  }
+
+  /**
+   * Get product features for display
+   */
+  const getProductFeatures = (product: Product): string[] => {
+    const features: string[] = []
+
+    if (product.category?.name) {
+      features.push(`📂 ${product.category.name}`)
+    }
+
+    if (product.ingredients && product.ingredients.length > 0) {
+      const allergens = product.ingredients.filter(i => i.isAllergen)
+      if (allergens.length > 0) {
+        features.push(`⚠️ Allergènes: ${allergens.map(a => a.name).join(', ')}`)
+      }
+
+      const mainIngredients = product.ingredients.filter(i => !i.isAllergen).slice(0, 3)
+      if (mainIngredients.length > 0) {
+        features.push(`🍃 ${mainIngredients.map(i => i.name).join(', ')}`)
+      }
+    } else {
+      features.push('✨ Recette artisanale')
+      features.push('👨‍🍳 Préparé avec soin')
+    }
+
+    // Ensure at least 2-3 features for consistent appearance
+    if (features.length < 2) {
+      features.push('🥘 Plat signature')
+    }
+
+    return features
+  }
+
+  /**
+   * Get product badge configuration
+   */
+  const getProductBadge = (product: Product): ProductBadge | null => {
+    if (!product.available) {
+      return { label: 'Indisponible', color: 'error' }
+    }
+
+    if (product.isVegan) {
+      return { label: 'Vegan', color: 'success' }
+    }
+
+    if (product.isVegetarian) {
+      return { label: 'Végétarien', color: 'success' }
+    }
+
+    return null
+  }
+
+  /**
+   * Find active menu or return first available menu
+   */
+  const findActiveMenu = (menus: Menu[]): Menu | null => {
+    if (menus.length === 0) return null
+    return menus.find(m => m.isActive) || menus[0] || null
+  }
+
+  /**
+   * Create menu options for select component
+   */
+  const createMenuOptions = (menus: Menu[]) => {
+    return menus.map(menu => ({
+      label: menu.name,
+      value: menu.id
+    }))
+  }
+
+  /**
+   * Sanitize and validate search query
+   */
+  const sanitizeSearchQuery = (query: string): string => {
+    return query.trim().substring(0, 100) // Limit to 100 characters
+  }
+
+  // =====================================
+  // ACTIONS
+  // =====================================
 
   const clearAllFilters = () => {
     searchQuery.value = ''
     selectedCategory.value = null
     maxPrice.value = 20
-    filters.value = { vegetarian: false, vegan: false, glutenFree: false, available: true, isNew: false, isPopular: false }
+    filters.value = {
+      vegetarian: false,
+      vegan: false,
+      glutenFree: false,
+      available: true,
+      isNew: false,
+      isPopular: false
+    }
     sortBy.value = 'name-asc'
     currentPage.value = 1
     showFilters.value = false
 
-    addNotification({
+    toast.add({
       title: 'Filtres effacés',
       description: 'Tous les filtres ont été réinitialisés',
-      type: 'info'
+      color: 'info'
     })
   }
 
@@ -218,40 +258,24 @@ export const useMenu = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 800))
 
-      addNotification({
+      toast.add({
         title: 'Ajouté au panier',
         description: `${product.name} a été ajouté à votre panier`,
-        type: 'success'
+        color: 'success',
+        icon: 'i-lucide-shopping-cart'
       })
 
       showProductModal.value = false
     } catch {
-      addNotification({
+      toast.add({
         title: 'Erreur',
         description: 'Impossible d\'ajouter le produit au panier',
-        type: 'error'
+        color: 'error'
       })
     } finally {
       addingToCart.value = null
     }
   }
-
-  // =====================================
-  // WATCHERS
-  // =====================================
-  
-  watch([searchQuery, selectedCategory, filters, maxPrice, sortBy], () => {
-    currentPage.value = 1
-  }, { deep: true })
-
-  const debouncedSearch = useDebounceFn(() => {
-    isSearching.value = false
-  }, 300)
-
-  watch(searchQuery, () => {
-    isSearching.value = true
-    debouncedSearch()
-  })
 
   return {
     // State
@@ -269,22 +293,20 @@ export const useMenu = () => {
     isSearching,
     itemsPerPage,
 
-    // Computed
-    activeFiltersCount,
-    breadcrumbLinks,
-    filteredProducts,
-    categoriesWithProducts,
-    paginatedProducts,
-    totalPages,
+    // Data fetching functions
+    fetchMenus,
+    fetchCategories,
 
-    // Data
-    products,
-    categories,
-    pending,
-    hasError,
+    // Utility functions
+    filterProducts,
+    getProductCountByCategory,
+    getProductFeatures,
+    getProductBadge,
+    findActiveMenu,
+    createMenuOptions,
+    sanitizeSearchQuery,
 
-    // Methods
-    refresh,
+    // Actions
     clearAllFilters,
     openProductModal,
     addToCart

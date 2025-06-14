@@ -4,7 +4,7 @@
       title="Food en K - Burgers  & Traiteur"
       description="Découvrez nos burgers faits maison et notre service traiteur pour tous vos événements. Commandez en ligne ou contactez-nous pour une expérience gourmande et conviviale !"
       orientation="horizontal"
-      image="/img/logo.png"
+
       :links="[
         {
           label: 'Voir nos burgers',
@@ -21,7 +21,13 @@
           variant: 'ghost'
         }
       ]"
-    />
+    >
+      <img
+        src="/img/Truck.png"
+        alt="App screenshot"
+        class="rounded-lg shadow-2xl ring ring-default"
+      >
+    </UPageHero>
 
     <!-- Stats Marquee Enhanced -->
     <UPageMarquee>

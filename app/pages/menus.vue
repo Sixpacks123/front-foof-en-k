@@ -1,66 +1,26 @@
 <template>
   <div class="bg-gray-50">
-    <!-- Hero Section avec accessibilité améliorée -->
-    <section
-      role="banner"
-      aria-labelledby="hero-title"
-      class="bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 text-white relative overflow-hidden"
-    >
-      <div class="absolute inset-0 bg-black/10" />
-      <UContainer class="relative py-16 sm:py-20 lg:py-24">
-        <div class="text-center max-w-4xl mx-auto">
-          <h1
-            id="hero-title"
-            class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6"
-          >
-            {{ activeMenu ? `Menu ${activeMenu.name}` : 'Le Menu' }}
-          </h1>
-          <p class="text-lg sm:text-xl lg:text-2xl text-primary-100 mb-6 sm:mb-8 leading-relaxed">
-            {{ activeMenu?.description || 'Découvrez notre sélection de produits délicieux, préparés avec des ingrédients frais et de qualité' }}
-          </p>
-
-          <!-- Navigation rapide vers recherche -->
-          <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <UButton
-              v-if="activeMenu"
-              size="xl"
-              variant="outline"
-              color="neutral"
-              class="font-semibold border-white text-white hover:bg-white hover:text-primary-600"
-              @click="scrollToSearch"
-            >
-              <UIcon
-                name="i-lucide-search"
-                class="w-5 h-5 mr-2"
-              />
-              Rechercher un plat
-            </UButton>
-            <UButton
-              v-if="activeMenu && categories.length > 0"
-              size="xl"
-              variant="solid"
-              color="neutral"
-              class="font-semibold bg-white text-primary-600 hover:bg-gray-100"
-              @click="scrollToCategories"
-            >
-              <UIcon
-                name="i-lucide-filter"
-                class="w-5 h-5 mr-2"
-              />
-              Voir les catégories
-            </UButton>
-          </div>
-        </div>
-      </UContainer>
-    </section>
+    <!-- Page Header -->
+    <UContainer class="py-8">
+      <div class="text-center">
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          {{ activeMenu ? `Menu ${activeMenu.name}` : 'Le Menu' }}
+        </h1>
+        <p
+          v-if="activeMenu?.description"
+          class="text-lg text-gray-600 max-w-2xl mx-auto"
+        >
+          {{ activeMenu.description }}
+        </p>
+      </div>
+    </UContainer>
 
     <!-- Breadcrumbs -->
     <UContainer class="py-4">
       <UBreadcrumb
         :links="[
           { label: 'Accueil', to: '/', icon: 'i-heroicons-home' },
-          { label: 'Menu', to: '/menus' },
-          ...(activeMenu ? [{ label: activeMenu.name }] : [])
+          { label: 'Menu', to: '/menus' }
         ]"
       />
     </UContainer>
@@ -79,7 +39,7 @@
           :options="menuOptions"
           placeholder="Sélectionner un menu..."
           size="lg"
-          @update:model-value="changeActiveMenu"
+          @update:model-value="(value: any) => changeActiveMenu(value as number)"
         />
       </UFormGroup>
     </UContainer>
@@ -101,112 +61,30 @@
       </p>
     </UContainer>
 
-    <!-- Categories Section avec accessibilité améliorée -->
+    <!-- Search and Filters Section -->
     <UContainer
-      v-else
+      v-if="activeMenu"
       class="py-8"
     >
       <section
-        id="category-filters"
-        role="group"
-        aria-labelledby="categories-title"
+        id="filters-section"
         class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100"
       >
+        <!-- Section Header -->
         <div class="flex items-center gap-3 mb-6">
-          <UIcon
-            name="i-lucide-filter"
-            class="w-5 h-5 text-primary-500"
-            aria-hidden="true"
-          />
-          <h2
-            id="categories-title"
-            class="text-lg font-semibold text-gray-800"
-          >
-            Catégories
-          </h2>
-        </div>
-
-        <div
-          v-if="pending"
-          class="flex flex-wrap gap-3"
-          aria-label="Chargement des catégories"
-        >
-          <USkeleton
-            v-for="i in 4"
-            :key="i"
-            class="h-10 w-28 rounded-full"
-          />
-        </div>
-        <div
-          v-else
-          class="flex flex-wrap gap-3"
-          role="group"
-          aria-label="Filtres par catégorie"
-        >
-          <UButton
-            :color="selectedCategory === null ? 'primary' : 'neutral'"
-            :variant="selectedCategory === null ? 'solid' : 'outline'"
-            size="lg"
-            class="rounded-full hover:scale-105 transition-all duration-200"
-            :aria-pressed="selectedCategory === null"
-            aria-label="Afficher tous les produits"
-            @click="selectedCategory = null"
-          >
-            <UIcon
-              name="i-lucide-grid-3x3"
-              class="w-4 h-4 mr-2"
-              aria-hidden="true"
-            />
-            Tous ({{ products?.length || 0 }})
-          </UButton>
-          <UButton
-            v-for="category in categories"
-            :key="(category as any).id"
-            :color="selectedCategory === (category as any).id ? 'primary' : 'neutral'"
-            :variant="selectedCategory === (category as any).id ? 'solid' : 'outline'"
-            size="lg"
-            class="rounded-full hover:scale-105 transition-all duration-200"
-            :aria-pressed="selectedCategory === (category as any).id"
-            :aria-label="`Filtrer par ${(category as any).name}`"
-            @click="selectedCategory = (category as any).id"
-          >
-            <UIcon
-              name="i-lucide-tag"
-              class="w-4 h-4 mr-2"
-              aria-hidden="true"
-            />
-            {{ (category as any).name }} ({{ getProductCountByCategory((category as any).id) }})
-          </UButton>
-        </div>
-      </section>
-    </UContainer>
-
-    <!-- Search and Filters avec accessibilité améliorée -->
-    <UContainer
-      v-if="activeMenu"
-      class="pb-6"
-    >
-      <section
-        id="search-section"
-        role="search"
-        aria-labelledby="search-title"
-        class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100"
-      >
-        <div class="flex items-center gap-3 mb-4">
           <UIcon
             name="i-lucide-search"
             class="w-5 h-5 text-primary-500"
             aria-hidden="true"
           />
-          <h2
-            id="search-title"
-            class="text-lg font-semibold text-gray-800"
-          >
-            Rechercher
+          <h2 class="text-lg font-semibold text-gray-800">
+            Recherche et filtres
           </h2>
         </div>
-        <div class="flex flex-col sm:flex-row gap-4">
-          <div class="relative flex-1">
+
+        <!-- Search Input -->
+        <div class="mb-6">
+          <div class="relative">
             <UInput
               id="search-input"
               v-model="searchQuery"
@@ -236,24 +114,69 @@
           </div>
         </div>
 
-        <!-- Suggestions de recherche -->
-        <div
-          v-if="!searchQuery && !pending && products.length > 0"
-          class="mt-4"
-        >
-          <p class="text-sm text-gray-600 mb-2">
-            Suggestions :
-          </p>
-          <div class="flex flex-wrap gap-2">
+        <!-- Categories Filter -->
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <UIcon
+              name="i-lucide-filter"
+              class="w-4 h-4 text-gray-500"
+              aria-hidden="true"
+            />
+            <h3 class="text-sm font-medium text-gray-700">
+              Filtrer par catégorie
+            </h3>
+          </div>
+
+          <div
+            v-if="pending"
+            class="flex flex-wrap gap-3"
+            aria-label="Chargement des catégories"
+          >
+            <USkeleton
+              v-for="i in 4"
+              :key="i"
+              class="h-10 w-28 rounded-full"
+            />
+          </div>
+          <div
+            v-else
+            class="flex flex-wrap gap-3"
+            role="radiogroup"
+            aria-label="Filtres par catégorie"
+          >
             <UButton
-              v-for="suggestion in getSearchSuggestions()"
-              :key="suggestion"
-              variant="ghost"
-              size="sm"
-              class="text-primary-600 hover:bg-primary-50"
-              @click="searchQuery = suggestion"
+              :color="selectedCategory === null ? 'primary' : 'neutral'"
+              :variant="selectedCategory === null ? 'solid' : 'outline'"
+              size="md"
+              class="rounded-full hover:scale-105 transition-all duration-200"
+              :aria-pressed="selectedCategory === null"
+              aria-label="Afficher tous les produits"
+              @click="selectedCategory = null"
             >
-              {{ suggestion }}
+              <UIcon
+                name="i-lucide-grid-3x3"
+                class="w-4 h-4 mr-2"
+                aria-hidden="true"
+              />
+              Tous ({{ products?.length || 0 }})
+            </UButton>
+            <UButton
+              v-for="category in categories"
+              :key="(category as any).id"
+              :color="selectedCategory === (category as any).id ? 'primary' : 'neutral'"
+              :variant="selectedCategory === (category as any).id ? 'solid' : 'outline'"
+              size="md"
+              class="rounded-full hover:scale-105 transition-all duration-200"
+              :aria-pressed="selectedCategory === (category as any).id"
+              :aria-label="`Filtrer par ${(category as any).name}`"
+              @click="selectedCategory = (category as any).id"
+            >
+              <UIcon
+                name="i-lucide-tag"
+                class="w-4 h-4 mr-2"
+                aria-hidden="true"
+              />
+              {{ (category as any).name }} ({{ getProductCountByCategory(products, (category as any).id) }})
             </UButton>
           </div>
         </div>
@@ -447,79 +370,61 @@
 </template>
 
 <script setup lang="ts">
+import type { Menu } from '~/types'
+
 // Meta page
 definePageMeta({
   title: 'Le Menu - Food en K',
   description: 'Découvrez notre sélection de burgers artisanaux'
 })
 
-// State
-const searchQuery = ref('')
-const selectedCategory = ref<number | null>(null)
-const activeMenuId = ref<number | null>(null)
-
 // Composables
-const { find } = useStrapi()
-const toast = useToast()
-const { formatPrice, formatDate } = useFormatting()
+const {
+  searchQuery,
+  selectedCategory,
+  getProductCountByCategory,
+  getProductFeatures,
+  getProductBadge,
+  findActiveMenu,
+  createMenuOptions,
+  addToCart,
+  fetchMenus,
+  fetchCategories
+} = useMenu()
+
+// State
+const activeMenuId = ref<number | null>(null)
 
 // Fetch menus with their products
 const { data: menusData, pending: menusPending } = await useLazyAsyncData('menus', () =>
-  find('menus', {
-    filters: {
-      publishedAt: { $notNull: true }
-    },
-    populate: {
-      products: {
-        populate: {
-          category: true,
-          ingredients: true,
-          images: true
-        }
-      }
-    },
-    sort: ['isActive:desc', 'createdAt:desc']
-  }).catch(() => {
-    return { data: [] }
-  })
+  fetchMenus().catch(() => [])
 )
 
 // Fetch categories separately
 const { data: categoriesData, pending: categoriesPending } = await useLazyAsyncData('categories', () =>
-  find('categories', {
-    filters: {
-      publishedAt: { $notNull: true }
-    }
-  }).catch(() => {
-    return { data: [] }
-  })
+  fetchCategories().catch(() => [])
 )
 
 // Computed menus avec typage correct
 const menus = computed(() => {
-  const rawMenus = menusData.value?.data || menusData.value || []
-  return Array.isArray(rawMenus) ? rawMenus : []
+  const rawMenus = menusData.value || []
+  return Array.isArray(rawMenus) ? rawMenus as Menu[] : []
 })
 
 const activeMenu = computed(() => {
   if (activeMenuId.value) {
-    return menus.value.find((m: any) => m.id === activeMenuId.value) || null
+    return menus.value.find(m => m.id === activeMenuId.value) || null
   }
-  return menus.value.find((m: any) => m.isActive) || menus.value[0] || null
+  return findActiveMenu(menus.value)
 })
 
 // Menu options for select
-const menuOptions = computed(() =>
-  menus.value.map((menu: any) => ({
-    label: menu.name,
-    value: menu.id
-  }))
-)
+const menuOptions = computed(() => createMenuOptions(menus.value))
 
 // Set initial active menu
 watch(menus, (newMenus) => {
   if (newMenus.length > 0 && !activeMenuId.value) {
-    const defaultMenu = newMenus.find((m: any) => m.isActive) || newMenus[0]
+    const defaultMenu = findActiveMenu(newMenus)
     activeMenuId.value = defaultMenu?.id || null
   }
 }, { immediate: true })
@@ -527,7 +432,7 @@ watch(menus, (newMenus) => {
 // Computed data avec typage correct
 const products = computed(() => activeMenu.value?.products || [])
 const categories = computed(() => {
-  const rawCategories = categoriesData.value?.data || categoriesData.value || []
+  const rawCategories = categoriesData.value || []
   return Array.isArray(rawCategories) ? rawCategories : []
 })
 const pending = computed(() => menusPending.value || categoriesPending.value)
@@ -555,106 +460,14 @@ const filteredProducts = computed(() => {
 })
 
 // Methods
-const scrollToSearch = () => {
-  const searchElement = document.getElementById('search-input')
-  if (searchElement) {
-    searchElement.focus()
-    searchElement.scrollIntoView({ behavior: 'smooth' })
-  }
-}
-
-const scrollToCategories = () => {
-  const categoriesElement = document.getElementById('category-filters')
-  if (categoriesElement) {
-    categoriesElement.scrollIntoView({ behavior: 'smooth' })
-  }
-}
-
 const clearSearch = () => {
   searchQuery.value = ''
-}
-
-const getSearchSuggestions = () => {
-  const suggestions = new Set<string>()
-
-  // Ajouter les noms de catégories
-  categories.value.forEach((cat: any) => {
-    if (cat.name) suggestions.add(cat.name)
-  })
-
-  // Ajouter quelques mots-clés populaires basés sur les produits
-  const keywords = ['burger', 'frites', 'boisson', 'dessert', 'végétarien', 'épicé']
-  keywords.forEach(keyword => suggestions.add(keyword))
-
-  return Array.from(suggestions).slice(0, 6)
 }
 
 const changeActiveMenu = (menuId: number) => {
   activeMenuId.value = menuId
   selectedCategory.value = null
   searchQuery.value = ''
-}
-
-const getProductCountByCategory = (categoryId: number) => {
-  return products.value.filter((p: any) => p.category?.id === categoryId).length
-}
-
-const getProductFeatures = (product: any) => {
-  const features = []
-
-  if (product.category?.name) {
-    features.push(`📂 ${product.category.name}`)
-  }
-
-  if (product.ingredients && product.ingredients.length > 0) {
-    const allergens = product.ingredients.filter((i: any) => i.isAllergen)
-    if (allergens.length > 0) {
-      features.push(`⚠️ Allergènes: ${allergens.map((a: any) => a.name).join(', ')}`)
-    }
-
-    const mainIngredients = product.ingredients.filter((i: any) => !i.isAllergen).slice(0, 3)
-    if (mainIngredients.length > 0) {
-      features.push(`🍃 ${mainIngredients.map((i: any) => i.name).join(', ')}`)
-    }
-  } else {
-    // Cas où il n'y a pas d'ingrédients - on ajoute un message informatif
-    features.push('✨ Recette artisanale')
-    features.push('👨‍🍳 Préparé avec soin')
-  }
-
-  // Toujours avoir au moins 2-3 features pour un aspect cohérent
-  if (features.length < 2) {
-    features.push('🥘 Plat signature')
-  }
-
-  return features
-}
-
-const getProductBadge = (product: any) => {
-  if (!product.available) {
-    return { label: 'Indisponible', color: 'error' as const }
-  }
-
-  if (product.isVegan) {
-    return { label: 'Vegan', color: 'success' as const }
-  }
-
-  if (product.isVegetarian) {
-    return { label: 'Végétarien', color: 'success' as const }
-  }
-
-  return null
-}
-
-const addToCart = (product: any) => {
-  if (!product.available) return
-
-  toast.add({
-    title: 'Ajouté au panier',
-    description: `${product.name} a été ajouté à votre panier`,
-    color: 'success',
-    icon: 'i-lucide-shopping-cart'
-  })
 }
 
 // SEO
