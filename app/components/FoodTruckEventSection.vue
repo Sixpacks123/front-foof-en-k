@@ -78,16 +78,24 @@
         description="* Associations : tarifs spéciaux"
       />
 
-      <div class="flex justify-center pt-6">
+      <div class="flex justify-center gap-4 pt-6">
+        <UButton
+          to="/events"
+          color="primary"
+          size="lg"
+          icon="i-lucide:info"
+          trailing
+          label="en savoir plus"
+          variant="outline"
+        />
         <UButton
           to="/contact"
           color="primary"
           size="lg"
           icon="i-heroicons-phone"
           trailing
-        >
-          Demander un devis
-        </UButton>
+          label="Demander un devis"
+        />
       </div>
     </div>
   </UPageSection>
