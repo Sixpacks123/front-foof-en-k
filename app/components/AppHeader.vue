@@ -35,6 +35,8 @@ const items = computed(() => [{
     />
 
     <template #right>
+      <CartButton />
+      
       <UColorModeButton />
 
       <UButton
@@ -44,22 +46,6 @@ const items = computed(() => [{
         to="/login"
         class="lg:hidden"
       />
-      <!--
-      <UButton
-        label="Sign in"
-        color="neutral"
-        variant="outline"
-        to="/login"
-        class="hidden lg:inline-flex"
-      />
-
-      <UButton
-        label="Sign up"
-        color="neutral"
-        trailing-icon="i-lucide-arrow-right"
-        class="hidden lg:inline-flex"
-        to="/signup"
-      /> -->
     </template>
 
     <template #body>

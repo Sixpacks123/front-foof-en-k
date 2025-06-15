@@ -1,0 +1,161 @@
+<template>
+  <div class="flex items-start space-x-4 p-4 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+    <!-- Image du produit -->
+    <div class="relative flex-shrink-0">
+      <div class="relative overflow-hidden rounded-lg">
+        <img
+          v-if="item.product.images && item.product.images.length > 0"
+          :src="getImageUrl(item.product.images[0]!, 'thumbnail')"
+          :alt="item.product.name"
+          class="w-16 h-16 object-cover"
+        >
+        <div
+          v-else
+          class="w-16 h-16 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
+        >
+          <UIcon
+            name="i-lucide-utensils"
+            class="w-6 h-6 text-gray-400"
+          />
+        </div>
+      </div>
+      
+      <!-- Badge de quantité -->
+      <div class="absolute -top-2 -right-2 min-w-[1.5rem] h-6 bg-primary text-white text-xs font-bold rounded-full flex items-center justify-center shadow-sm border-2 border-white dark:border-gray-900">
+        {{ item.quantity }}
+      </div>
+    </div>
+
+    <!-- Détails du produit -->
+    <div class="flex-1 min-w-0">
+      <div class="flex justify-between items-start mb-2">
+        <div class="flex-1 pr-2">
+          <h4 class="text-sm font-semibold text-gray-900 dark:text-white line-clamp-1">
+            {{ item.product.name }}
+          </h4>
+          <p
+            v-if="item.product.description"
+            class="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2"
+          >
+            {{ item.product.description }}
+          </p>
+        </div>
+
+        <!-- Bouton supprimer -->
+        <UButton
+          color="neutral"
+          variant="ghost"
+          icon="i-lucide-x"
+          size="xs"
+          @click="$emit('remove', item.id)"
+        />
+      </div>
+
+      <!-- Prix et badges -->
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center space-x-2">
+          <span class="text-sm font-bold text-gray-900 dark:text-white">
+            {{ formatPrice(item.product.price) }}
+          </span>
+          <div class="flex items-center space-x-1">
+            <UBadge
+              v-if="item.product.isVegetarian"
+              color="success"
+              variant="soft"
+              size="xs"
+            >
+              🌱 Végé
+            </UBadge>
+            <UBadge
+              v-if="item.product.isVegan"
+              color="success"
+              variant="soft"
+              size="xs"
+            >
+              🌿 Vegan
+            </UBadge>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes personnalisées -->
+      <div
+        v-if="item.notes"
+        class="mb-3 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg"
+      >
+        <div class="flex items-start space-x-2">
+          <UIcon
+            name="i-lucide-sticky-note"
+            class="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0"
+          />
+          <span class="text-xs text-amber-800 dark:text-amber-200 font-medium">{{ item.notes }}</span>
+        </div>
+      </div>
+
+      <!-- Contrôles de quantité et total -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 rounded-full p-1">
+          <UButton
+            color="neutral"
+            variant="ghost"
+            icon="i-lucide-minus"
+            size="xs"
+            :disabled="item.quantity <= 1"
+            class="rounded-full"
+            @click="updateQuantity(item.quantity - 1)"
+          />
+          <span class="text-sm font-bold min-w-[2.5rem] text-center px-2 py-1">
+            {{ item.quantity }}
+          </span>
+          <UButton
+            color="neutral"
+            variant="ghost"
+            icon="i-lucide-plus"
+            size="xs"
+            class="rounded-full"
+            @click="updateQuantity(item.quantity + 1)"
+          />
+        </div>
+        
+        <!-- Total -->
+        <div class="text-right">
+          <div class="text-sm font-bold text-primary">
+            {{ formatPrice(itemTotal) }}
+          </div>
+          <div class="text-xs text-gray-400">
+            {{ item.quantity }} × {{ formatPrice(item.product.price) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import type { CartItem } from '~/types'
+
+interface Props {
+  item: CartItem
+}
+
+interface Emits {
+  (e: 'update-quantity', itemId: string, quantity: number): void
+  (e: 'remove', itemId: string): void
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<Emits>()
+
+// Composables
+const { formatPrice } = useFormatting()
+const { getImageUrl } = useStrapiImage()
+
+// Computed
+const itemTotal = computed(() => props.item.product.price * props.item.quantity)
+
+// Methods
+const updateQuantity = (newQuantity: number) => {
+  if (newQuantity < 1) return
+  emit('update-quantity', props.item.id, newQuantity)
+}
+</script>

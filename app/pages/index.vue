@@ -208,113 +208,51 @@
 
     <!-- Burger du moment enhanced -->
     <UPageSection
+      v-if="burgerDuMoment"
       title="Le burger signature du moment"
       description="Découvrez notre création vedette du moment, préparée avec passion par notre équipe et plébiscitée par nos clients !"
     >
       <UCard class="max-w-6xl mx-auto overflow-hidden">
         <div class="lg:flex lg:items-center lg:gap-0">
           <div class="lg:flex-1 lg:p-12 p-8">
-            <div class="flex items-center gap-4 mb-6">
+            <div class="flex items-center gap-4 mb-6 flex-wrap">
               <UBadge
-                color="warning"
+                v-for="badge in productBadges"
+                :key="badge.label"
+                :color="badge.color"
+                :variant="badge.variant || 'solid'"
                 size="lg"
                 class="px-4 py-2"
               >
                 <UIcon
-                  name="i-lucide-flame"
+                  :name="badge.icon"
                   class="w-5 h-5 mr-2"
                 />
-                Signature du Chef
-              </UBadge>
-              <UBadge
-                color="success"
-                variant="outline"
-                size="lg"
-                class="px-4 py-2"
-              >
-                <UIcon
-                  name="i-lucide-leaf"
-                  class="w-4 h-4 mr-2"
-                />
-                100% Local
+                {{ badge.label }}
               </UBadge>
             </div>
 
             <h3 class="text-4xl font-bold mb-6 bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
-              Le Classic Premium
+              {{ burgerDuMoment.name }}
             </h3>
 
             <p class="text-gray-600 dark:text-gray-400 text-xl mb-8 leading-relaxed">
-              Notre buns artisanal doré à souhait, salade croquante du jardin, oignons frits croustillants,
-              généreux cheddar fondu, steak VBF haché minute et notre légendaire sauce burger maison aux herbes secrètes.
+              {{ burgerDuMoment.description || 'Notre burger signature préparé avec des ingrédients frais et locaux, une recette unique qui fait notre fierté.' }}
             </p>
 
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
               <UBadge
+                v-for="ingredient in ingredientsList"
+                :key="ingredient"
                 variant="soft"
                 size="md"
                 class="justify-center py-2"
               >
                 <UIcon
-                  name="i-lucide-wheat"
+                  name="i-lucide-circle-dot"
                   class="w-4 h-4 mr-2"
                 />
-                Buns artisanal
-              </UBadge>
-              <UBadge
-                variant="soft"
-                size="md"
-                class="justify-center py-2"
-              >
-                <UIcon
-                  name="i-lucide-salad"
-                  class="w-4 h-4 mr-2"
-                />
-                Salade fraîche
-              </UBadge>
-              <UBadge
-                variant="soft"
-                size="md"
-                class="justify-center py-2"
-              >
-                <UIcon
-                  name="i-lucide-zap"
-                  class="w-4 h-4 mr-2"
-                />
-                Oignons frits
-              </UBadge>
-              <UBadge
-                variant="soft"
-                size="md"
-                class="justify-center py-2"
-              >
-                <UIcon
-                  name="i-lucide-cheese"
-                  class="w-4 h-4 mr-2"
-                />
-                Cheddar premium
-              </UBadge>
-              <UBadge
-                variant="soft"
-                size="md"
-                class="justify-center py-2"
-              >
-                <UIcon
-                  name="i-lucide-beef"
-                  class="w-4 h-4 mr-2"
-                />
-                Steak VBF
-              </UBadge>
-              <UBadge
-                variant="soft"
-                size="md"
-                class="justify-center py-2"
-              >
-                <UIcon
-                  name="i-lucide-droplets"
-                  class="w-4 h-4 mr-2"
-                />
-                Sauce secrète
+                {{ ingredient }}
               </UBadge>
             </div>
 
@@ -348,7 +286,19 @@
 
           <div class="lg:w-96 relative">
             <div class="aspect-square bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200 dark:from-primary-900/20 dark:via-primary-800/20 dark:to-primary-700/20 rounded-2xl lg:rounded-none lg:rounded-r-2xl flex items-center justify-center relative overflow-hidden">
-              <div class="text-center z-10">
+              <!-- Product image if available -->
+              <img
+                v-if="productImage"
+                :src="productImage"
+                :alt="burgerDuMoment.name"
+                class="w-full h-full object-cover"
+              >
+              
+              <!-- Fallback placeholder -->
+              <div
+                v-else
+                class="text-center z-10"
+              >
                 <div class="w-40 h-40 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl">
                   <UIcon
                     name="i-lucide-hamburger"
@@ -368,7 +318,7 @@
               <!-- Price tag enhanced -->
               <div class="absolute top-6 right-6">
                 <div class="bg-red-500 text-white px-4 py-2 rounded-full font-bold text-lg shadow-lg">
-                  8,90€
+                  {{ formatPrice(burgerDuMoment.price) }}
                 </div>
               </div>
 
@@ -397,7 +347,9 @@
 
     <!-- Events Component -->
     <FoodTruckEventSection />
-
+    <UPageSection>
+      <Galerie />
+    </UPageSection>
     <!-- CTA Simple vers les pages dédiées -->
     <UPageSection
       title="Prêt à découvrir Food en K ?"
@@ -480,6 +432,7 @@
         </UPageCard>
       </UPageGrid>
     </UPageSection>
+
   </div>
 </template>
 
@@ -501,5 +454,45 @@ useSeoMeta({
   ogTitle: 'Food en K - Burgers artisanaux à Merdrignac',
   ogDescription: 'Burgers à la française avec viande bovine bretonne et ingrédients locaux. Service traiteur pour vos événements.',
   ogImage: '/og-foodenk.jpg'
+})
+
+// =====================================
+// BURGER DU MOMENT
+// =====================================
+
+const {
+  fetchBurgerDuMoment,
+  getIngredientsList,
+  getProductImage,
+  formatPrice,
+  getProductBadges
+} = useBurgerDuMoment()
+
+// Fetch burger du moment data
+const { data: burgerDuMoment, error } = await useAsyncData(
+  'burger-du-moment',
+  () => fetchBurgerDuMoment(),
+  {
+    default: () => null,
+    server: true
+  }
+)
+
+// Handle fetch error
+if (error.value) {
+  console.error('Error fetching burger du moment:', error.value)
+}
+
+// Computed values for template
+const ingredientsList = computed(() => {
+  return burgerDuMoment.value ? getIngredientsList(burgerDuMoment.value) : []
+})
+
+const productImage = computed(() => {
+  return burgerDuMoment.value ? getProductImage(burgerDuMoment.value) : null
+})
+
+const productBadges = computed(() => {
+  return burgerDuMoment.value ? getProductBadges(burgerDuMoment.value) : []
 })
 </script>

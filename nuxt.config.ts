@@ -5,7 +5,8 @@ export default defineNuxtConfig({
     '@nuxt/ui-pro',
     '@nuxtjs/strapi',
     '@vueuse/nuxt',
-    '@nuxt/image'
+    '@nuxt/image',
+    '@pinia/nuxt'
   ],
 
   devtools: {
@@ -79,13 +80,6 @@ export default defineNuxtConfig({
     }
   },
   image: {
-    strapi: {
-      baseURL: process.env.STRAPI_URL || 'http://localhost:1337'
-
-    }
-  },
-
-  image: {
     quality: 80,
     format: ['webp', 'avif', 'jpg'],
     screens: {
@@ -95,6 +89,9 @@ export default defineNuxtConfig({
       lg: 1024,
       xl: 1280,
       xxl: 1536
+    },
+    strapi: {
+      baseURL: `${process.env.STRAPI_URL || 'http://localhost:1337'}`
     }
   }
 })

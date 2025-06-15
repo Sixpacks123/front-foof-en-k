@@ -91,6 +91,40 @@ export const useMenu = () => {
     }
   }
 
+  /**
+   * Fetch products from Strapi
+   */
+  const fetchProducts = async (categorySlug?: string): Promise<Product[]> => {
+    try {
+      const filters: Record<string, unknown> = {
+        publishedAt: { $notNull: true }
+      }
+
+      // Add category filter if provided
+      if (categorySlug) {
+        filters.category = {
+          slug: categorySlug
+        }
+      }
+
+      const response = await find('products', {
+        filters,
+        populate: {
+          category: true,
+          ingredients: true,
+          images: true
+        },
+        sort: ['createdAt:desc']
+      })
+      
+      const rawProducts = response?.data || response || []
+      return Array.isArray(rawProducts) ? rawProducts as Product[] : []
+    } catch (error) {
+      console.error('Error fetching products:', error)
+      return []
+    }
+  }
+
   // =====================================
   // UTILITY FUNCTIONS
   // =====================================
@@ -147,7 +181,7 @@ export const useMenu = () => {
     const features: string[] = []
 
     if (product.category?.name) {
-      features.push(`📂 ${product.category.name}`)
+      features.push(`${product.category.name}`)
     }
 
     if (product.ingredients && product.ingredients.length > 0) {
@@ -158,7 +192,7 @@ export const useMenu = () => {
 
       const mainIngredients = product.ingredients.filter(i => !i.isAllergen).slice(0, 3)
       if (mainIngredients.length > 0) {
-        features.push(`🍃 ${mainIngredients.map(i => i.name).join(', ')}`)
+        features.push(`${mainIngredients.map(i => i.name).join(', ')}`)
       }
     } else {
       features.push('✨ Recette artisanale')
@@ -250,22 +284,18 @@ export const useMenu = () => {
     showProductModal.value = true
   }
 
-  const addToCart = async (product: Product) => {
+  const addToCart = async (product: Product, quantity: number = 1) => {
     if (!product.available) return
 
     addingToCart.value = product.id
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 800))
-
-      toast.add({
-        title: 'Ajouté au panier',
-        description: `${product.name} a été ajouté à votre panier`,
-        color: 'success',
-        icon: 'i-lucide-shopping-cart'
-      })
-
-      showProductModal.value = false
+      const { addToCart: addProductToCart } = useCart()
+      const success = await addProductToCart(product, quantity)
+      
+      if (success) {
+        showProductModal.value = false
+      }
     } catch {
       toast.add({
         title: 'Erreur',
@@ -296,6 +326,7 @@ export const useMenu = () => {
     // Data fetching functions
     fetchMenus,
     fetchCategories,
+    fetchProducts,
 
     // Utility functions
     filterProducts,

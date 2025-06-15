@@ -50,24 +50,28 @@
         <UInput
           :model-value="estimatedGuests"
           type="number"
-          min="1"
-          placeholder="ex: 50"
+          min="50"
+          max="500"
+          placeholder="ex: 100"
           icon="i-lucide-users"
           :disabled="isSubmitting"
           @update:model-value="$emit('update:estimatedGuests', Number($event))"
         />
+        <template #help>
+          <span class="text-xs text-gray-500">Minimum 50 personnes</span>
+        </template>
       </UFormGroup>
 
       <UFormGroup
-        label="Budget approximatif"
-        name="budget"
+        label="Heure souhaitée"
+        name="eventTime"
       >
         <USelect
-          :model-value="budget"
-          :options="budgetOptions"
-          placeholder="Votre budget..."
+          :model-value="eventTime"
+          :options="timeOptions"
+          placeholder="Moment de la journée..."
           :disabled="isSubmitting"
-          @update:model-value="$emit('update:budget', $event as string)"
+          @update:model-value="$emit('update:eventTime', $event as string)"
         />
       </UFormGroup>
     </div>
@@ -85,6 +89,19 @@
         @update:model-value="emit('update:eventLocation', $event)"
       />
     </UFormGroup>
+
+    <UFormGroup
+      label="Budget approximatif"
+      name="budget"
+    >
+      <USelect
+        :model-value="budget"
+        :options="budgetOptions"
+        placeholder="Votre budget..."
+        :disabled="isSubmitting"
+        @update:model-value="$emit('update:budget', $event as string)"
+      />
+    </UFormGroup>
   </div>
 </template>
 
@@ -95,6 +112,7 @@ defineProps<{
   estimatedGuests?: number
   eventType?: string
   budget?: string
+  eventTime?: string
   isSubmitting: boolean
 }>()
 
@@ -103,24 +121,34 @@ const emit = defineEmits([
   'update:eventLocation',
   'update:estimatedGuests',
   'update:eventType',
-  'update:budget'
+  'update:budget',
+  'update:eventTime'
 ])
 
 // Options pour les selects
 const eventTypeOptions = [
   { label: 'Mariage', value: 'wedding' },
-  { label: 'Événement d\'entreprise', value: 'corporate' },
-  { label: 'Anniversaire', value: 'birthday' },
+  { label: 'Événement d\'entreprise / Team building', value: 'corporate' },
+  { label: 'Anniversaire / Fête privée', value: 'birthday' },
   { label: 'Festival / Fête locale', value: 'festival' },
+  { label: 'Inauguration', value: 'inauguration' },
+  { label: 'Séminaire', value: 'seminar' },
   { label: 'Autre', value: 'other' }
 ]
 
 const budgetOptions = [
-  { label: 'Moins de 500€', value: 'less-than-500' },
-  { label: 'Entre 500€ et 1000€', value: '500-1000' },
+  { label: 'Moins de 1000€', value: 'less-than-1000' },
   { label: 'Entre 1000€ et 2000€', value: '1000-2000' },
-  { label: 'Plus de 2000€', value: 'more-than-2000' },
+  { label: 'Entre 2000€ et 5000€', value: '2000-5000' },
+  { label: 'Plus de 5000€', value: 'more-than-5000' },
   { label: 'À discuter', value: 'to-discuss' }
+]
+
+const timeOptions = [
+  { label: 'Midi (11h-14h)', value: 'lunch' },
+  { label: 'Après-midi (14h-18h)', value: 'afternoon' },
+  { label: 'Soir (18h-22h)', value: 'evening' },
+  { label: 'Toute la journée', value: 'all-day' }
 ]
 
 // Date minimum (aujourd'hui + 1 semaine)

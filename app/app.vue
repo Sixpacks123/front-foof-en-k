@@ -55,5 +55,8 @@ useSeoMeta({
         />
       </template>
     </UFooter>
+
+    <!-- Cart Drawer -->
+    <CartDrawer />
   </UApp>
 </template>

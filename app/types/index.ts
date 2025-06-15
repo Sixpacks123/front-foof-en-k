@@ -91,14 +91,49 @@ export interface Ingredient extends BaseEntity {
 }
 
 /**
- * Product image
+ * Strapi image format for responsive images
+ */
+export interface StrapiImageFormat {
+  name: string
+  hash: string
+  ext: string
+  mime: string
+  path: string | null
+  width: number
+  height: number
+  size: number
+  sizeInBytes: number
+  url: string
+}
+
+/**
+ * Strapi image formats object
+ */
+export interface StrapiImageFormats {
+  thumbnail?: StrapiImageFormat
+  small?: StrapiImageFormat
+  medium?: StrapiImageFormat
+  large?: StrapiImageFormat
+}
+
+/**
+ * Product image from Strapi v5
  */
 export interface ProductImage extends BaseEntity {
+  name: string
+  alternativeText?: string | null
+  caption?: string | null
+  width: number
+  height: number
+  formats: StrapiImageFormats
+  hash: string
+  ext: string
+  mime: string
+  size: number
   url: string
-  alternativeText?: string
-  caption?: string
-  width?: number
-  height?: number
+  previewUrl?: string | null
+  provider: string
+  provider_metadata?: Record<string, unknown> | null
 }
 
 /**
@@ -265,4 +300,112 @@ export interface BannerData {
   alerts: Alert[]
 }
 
+/**
+ * Gallery image interface
+ */
+export interface GalleryImage {
+  id: number
+  url: string
+  alt: string
+  title?: string
+  description?: string
+}
+
+/**
+ * Gallery image from Strapi (extends BaseEntity)
+ */
+export interface StrapiGalleryImage extends BaseEntity {
+  url: string
+  alt: string
+  title?: string
+  description?: string
+}
+
 // =====================================
+// CART TYPES
+// =====================================
+
+/**
+ * Cart item represents a product in the cart with quantity
+ */
+export interface CartItem {
+  id: string // unique identifier for the cart item
+  product: Product
+  quantity: number
+  notes?: string // optional notes for the item
+  addedAt: Date
+}
+
+/**
+ * Cart state interface
+ */
+export interface Cart {
+  items: CartItem[]
+  total: number
+  itemCount: number
+  createdAt: Date
+  updatedAt: Date
+}
+
+/**
+ * Cart store state interface
+ */
+export interface CartStore {
+  items: CartItem[]
+  isOpen: boolean
+}
+
+/**
+ * Order summary for SMS/phone
+ */
+export interface OrderSummary {
+  items: CartItem[]
+  total: number
+  itemCount: number
+  formattedMessage: string
+  phoneNumber?: string
+}
+
+/**
+ * Contact information for order
+ */
+export interface OrderContact {
+  name: string
+  phone: string
+  email?: string
+  notes?: string
+}
+
+/**
+ * Order action types
+ */
+export type OrderAction = 'call' | 'sms' | 'copy'
+
+/**
+ * Order summary configuration
+ */
+export interface OrderConfig {
+  restaurantName: string
+  restaurantPhone: string
+  minimumOrder?: number
+  deliveryFee?: number
+}
+
+/**
+ * Order summary item for display
+ */
+export interface OrderSummaryItem {
+  name: string
+  price: number
+  quantity: number
+  total: number
+}
+
+/**
+ * Complete order summary
+ */
+export interface CompleteOrderSummary {
+  items: OrderSummaryItem[]
+  total: number
+  itemCount: number
+}

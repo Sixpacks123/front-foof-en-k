@@ -266,14 +266,13 @@
           class="group relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-primary-200"
         >
           <!-- Product Image -->
+
           <div class="relative aspect-[4/3] overflow-hidden">
-            <img
-              v-if="product.images?.[0]?.url"
-              :src="product.images[0].url"
-              :alt="product.name"
+            <NuxtImg
+              v-if="product.images?.[0]"
+              v-bind="getOptimizedImageProps(product.images[0], product.name, 'card', 'medium')"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              loading="lazy"
-            >
+            />
             <div
               v-else
               class="flex flex-col items-center justify-center h-full bg-gradient-to-br from-gray-50 to-gray-100 border-b border-gray-200"
@@ -391,6 +390,8 @@ const {
   fetchMenus,
   fetchCategories
 } = useMenu()
+
+const { getOptimizedImageProps } = useStrapiImage()
 
 // State
 const activeMenuId = ref<number | null>(null)

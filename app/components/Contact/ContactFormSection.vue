@@ -95,6 +95,7 @@
             v-model:estimated-guests="form.estimatedGuests"
             v-model:event-type="form.eventType"
             v-model:budget="form.budget"
+            v-model:event-time="form.eventTime"
             :is-submitting="isSubmitting"
           />
 
@@ -156,9 +157,10 @@ const form = reactive<ContactFormData>({
   name: '',
   email: '',
   phone: '',
-  requestType: 'question',
+  requestType: 'info',
   message: '',
   eventDate: '',
+  eventTime: '',
   eventLocation: '',
   estimatedGuests: undefined,
   eventType: undefined,
@@ -167,10 +169,9 @@ const form = reactive<ContactFormData>({
 
 // Options pour les selects
 const requestTypeOptions = [
+  { label: 'Demande d\'événement', value: 'event' },
+  { label: 'Demande d\'information', value: 'info' },
   { label: 'Commande burger', value: 'order' },
-  { label: 'Événement / Traiteur', value: 'event' },
-  { label: 'Réservation food truck', value: 'foodtruck' },
-  { label: 'Question générale', value: 'question' },
   { label: 'Autre demande', value: 'other' }
 ]
 
@@ -181,9 +182,7 @@ const getMessagePlaceholder = () => {
       return 'Indiquez-nous vos burgers préférés, quantités et horaire de récupération souhaité...'
     case 'event':
       return 'Décrivez votre événement : ambiance souhaitée, contraintes particulières, services additionnels...'
-    case 'foodtruck':
-      return 'Précisez le lieu, la date et les détails de votre demande de réservation...'
-    case 'question':
+    case 'info':
       return 'Posez-nous votre question, nous vous répondrons rapidement...'
     default:
       return 'Décrivez votre demande en détail...'
@@ -219,7 +218,7 @@ watch(isSuccess, (newValue) => {
         name: '',
         email: '',
         phone: '',
-        requestType: 'question',
+        requestType: 'info',
         message: '',
         eventDate: '',
         eventLocation: '',

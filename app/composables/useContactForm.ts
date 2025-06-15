@@ -2,15 +2,16 @@ export interface ContactFormData {
   name: string
   email: string
   phone?: string
-  requestType: 'order' | 'event' | 'foodtruck' | 'question' | 'other'
+  requestType: 'order' | 'event' | 'info' | 'other'
   message: string
   
   // Champs spécifiques aux événements
-  eventType?: 'wedding' | 'corporate' | 'birthday' | 'festival' | 'other'
+  eventType?: 'wedding' | 'corporate' | 'birthday' | 'festival' | 'inauguration' | 'seminar' | 'other'
   eventDate?: string
+  eventTime?: string
   eventLocation?: string
   estimatedGuests?: number
-  budget?: 'less-than-500' | '500-1000' | '1000-2000' | 'more-than-2000' | 'to-discuss'
+  budget?: 'less-than-1000' | '1000-2000' | '2000-5000' | 'more-than-5000' | 'to-discuss'
   specificRequirements?: string
   hasAllergies?: boolean
   allergiesDetails?: string
