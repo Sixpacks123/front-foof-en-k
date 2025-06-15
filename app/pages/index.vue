@@ -2,7 +2,7 @@
   <div>
     <UPageHero
       title="Food en K - Burgers  & Traiteur"
-      description="Découvrez nos burgers faits maison et notre service traiteur pour tous vos événements. Commandez en ligne ou contactez-nous pour une expérience gourmande et conviviale !"
+      description="Découvrez nos burgers faits maison et notre service traiteur pour tous vos événements. contactez-nous pour une expérience gourmande et conviviale !"
       orientation="horizontal"
 
       :links="[
@@ -342,14 +342,24 @@
       </UCard>
     </UPageSection>
 
-    <!-- Map Component -->
-    <MapLocations />
-
     <!-- Events Component -->
     <FoodTruckEventSection />
+    <!-- Galerie photos -->
     <UPageSection>
       <Galerie />
     </UPageSection>
+
+    <!-- Section emplacements simplifiée -->
+    <UPageSection
+      title="Où nous trouver"
+      description="Découvrez nos emplacements de la semaine. Notre food truck se déplace pour vous apporter le meilleur de nos burgers artisanaux."
+    >
+      <LocationsPreview
+        :locations="locations"
+        :pending="locationsPending"
+      />
+    </UPageSection>
+
     <!-- CTA Simple vers les pages dédiées -->
     <UPageSection
       title="Prêt à découvrir Food en K ?"
@@ -432,7 +442,6 @@
         </UPageCard>
       </UPageGrid>
     </UPageSection>
-
   </div>
 </template>
 
@@ -440,6 +449,22 @@
 import MapLocations from '~/components/MapLocations.vue'
 import FoodTruckEventSection from '~/components/FoodTruckEventSection.vue'
 import LocalProductsSection from '~/components/LocalProductsSection.vue'
+
+// =====================================
+// EMPLACEMENTS
+// =====================================
+
+const { fetchLocations } = useLocations()
+
+// Récupération des emplacements pour la section preview
+const { data: locations, pending: locationsPending } = await useAsyncData(
+  'locations-preview',
+  () => fetchLocations(),
+  {
+    default: () => [],
+    server: true
+  }
+)
 
 // Meta
 definePageMeta({

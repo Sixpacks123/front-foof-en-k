@@ -409,3 +409,30 @@ export interface CompleteOrderSummary {
   total: number
   itemCount: number
 }
+
+/**
+ * Location/Emplacement data from Strapi
+ */
+export interface Location extends BaseEntity {
+  name: string
+  address: string
+  latitude: number
+  longitude: number
+  city: string
+  postal_code: string
+  description?: string
+  phone?: string
+  isActive: boolean
+  image?: MediaFile[]
+  opening_hours?: string
+  start_time?: string
+  end_time?: string
+}
+
+/**
+ * Location with computed properties for display
+ */
+export interface LocationWithDistance extends Location {
+  distance?: number
+  displayTime?: string
+}

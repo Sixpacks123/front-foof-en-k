@@ -6,6 +6,10 @@ const items = computed(() => [{
   to: '/menus',
   active: route.path.startsWith('/menu')
 }, {
+  label: 'Emplacements',
+  to: '/emplacements',
+  active: route.path.startsWith('/emplacements')
+}, {
   label: 'Evenements',
   to: '/events',
   active: route.path.startsWith('/events')
@@ -19,13 +23,11 @@ const items = computed(() => [{
   <UHeader>
     <template #left>
       <NuxtLink to="/">
-        <NuxtImg
+        <img
           src="/img/logo.png"
           alt="Logo"
-          width="32"
-          height="32"
-          class="h-8 w-auto"
-        />
+          class="h-24 w-auto"
+        >
       </NuxtLink>
     </template>
 
@@ -36,7 +38,7 @@ const items = computed(() => [{
 
     <template #right>
       <CartButton />
-      
+
       <UColorModeButton />
 
       <UButton

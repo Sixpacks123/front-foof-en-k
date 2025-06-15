@@ -6,7 +6,8 @@ export default defineNuxtConfig({
     '@nuxtjs/strapi',
     '@vueuse/nuxt',
     '@nuxt/image',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@nuxtjs/leaflet'
   ],
 
   devtools: {

@@ -453,16 +453,14 @@
       title="Questions fréquentes"
       description="Tout ce que vous devez savoir sur nos services événementiels"
     >
-      <div class="max-w-4xl mx-auto">
-        <UAccordion
-          :items="faqItems"
-          :ui="{
-            item: {
-              padding: 'py-6'
-            }
-          }"
-        />
-      </div>
+      <UAccordion
+        :items="faqItems"
+        :ui="{
+          item: {
+            padding: 'py-6'
+          }
+        }"
+      />
     </UPageSection>
 
     <!-- CTA Final -->

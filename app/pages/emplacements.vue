@@ -19,26 +19,38 @@ const onLocationSelect = (location: Location) => {
 
 // Meta de la page
 useHead({
-  title: 'Test - Emplacements',
+  title: 'Nos emplacements - Food en K',
   meta: [
-    { name: 'description', content: 'Page de test pour les emplacements' }
+    { name: 'description', content: 'Découvrez tous nos emplacements et horaires. Trouvez le Food Truck Food en K près de chez vous.' }
   ]
 })
 </script>
 
 <template>
   <div>
-    <UContainer class="py-8">
-      <!-- En-tête -->
-      <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">
-          Test - Emplacements
-        </h1>
-        <p class="text-gray-600">
-          Page de test pour afficher les emplacements sur une carte et dans une liste
-        </p>
+    <!-- Hero Section -->
+    <UPageHero
+      title="Nos emplacements"
+      description="Découvrez où nous trouver cette semaine. Notre food truck sillonne la région pour vous apporter le meilleur de nos burgers artisanaux."
+      orientation="horizontal"
+      :links="[
+        {
+          label: 'Nous contacter',
+          to: '/contact',
+          icon: 'i-heroicons-phone',
+          size: 'lg'
+        }
+      ]"
+    >
+      <div class="flex items-center justify-center w-full h-64 bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl">
+        <UIcon
+          name="i-heroicons-map-pin"
+          class="w-24 h-24 text-primary-500"
+        />
       </div>
+    </UPageHero>
 
+    <UContainer class="py-12">
       <!-- États de chargement et d'erreur -->
       <UAlert
         v-if="error"
@@ -67,8 +79,8 @@ useHead({
         <LocationsMap
           ref="mapRef"
           :locations="locations"
-          :default-center="[46.603354, 1.888334]"
-          :default-zoom="6"
+          :default-center="[48.1173, -2.2571]"
+          :default-zoom="10"
         />
 
         <!-- Liste des emplacements -->
