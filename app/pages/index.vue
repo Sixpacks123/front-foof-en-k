@@ -287,13 +287,11 @@
           <div class="lg:w-96 relative">
             <div class="aspect-square bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200 dark:from-primary-900/20 dark:via-primary-800/20 dark:to-primary-700/20 rounded-2xl lg:rounded-none lg:rounded-r-2xl flex items-center justify-center relative overflow-hidden">
               <!-- Product image if available -->
-              <img
-                v-if="productImage"
-                :src="productImage"
-                :alt="burgerDuMoment.name"
-                class="w-full h-full object-cover"
-              >
-              
+              <NuxtImg
+                v-if="burgerDuMoment.images?.[0]"
+                v-bind="getOptimizedImageProps(burgerDuMoment.images[0], burgerDuMoment.name, 'card', 'medium')"
+                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              />
               <!-- Fallback placeholder -->
               <div
                 v-else
@@ -309,6 +307,7 @@
                   Photo prochainement disponible
                 </p>
               </div>
+              {{ burgerDuMoment.url }}
 
               <!-- Decorative elements -->
               <div class="absolute top-4 left-4 w-16 h-16 bg-yellow-400/20 rounded-full blur-xl" />
@@ -446,7 +445,7 @@
 </template>
 
 <script setup>
-import MapLocations from '~/components/MapLocations.vue'
+import { NuxtImg } from '#components'
 import FoodTruckEventSection from '~/components/FoodTruckEventSection.vue'
 import LocalProductsSection from '~/components/LocalProductsSection.vue'
 
@@ -455,6 +454,7 @@ import LocalProductsSection from '~/components/LocalProductsSection.vue'
 // =====================================
 
 const { fetchLocations } = useLocations()
+const { getOptimizedImageProps } = useStrapiImage()
 
 // Récupération des emplacements pour la section preview
 const { data: locations, pending: locationsPending } = await useAsyncData(

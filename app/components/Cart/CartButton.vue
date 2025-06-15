@@ -1,5 +1,8 @@
 <template>
-  <div class="relative">
+  <div
+    v-if="cartStore.itemCount >= 1"
+    class="relative"
+  >
     <UButton
       color="neutral"
       variant="outline"
@@ -15,7 +18,7 @@
           :class="cartStore.itemCount > 0 ? 'animate-bounce' : ''"
         />
       </template>
-      
+
       <!-- Badge avec animation -->
       <Transition
         name="badge"
@@ -64,7 +67,7 @@ watch(() => cartStore.itemCount, (newCount, oldCount) => {
     showAddEffect.value = true
     bounceClass.value = 'animate-bounce'
     pulseEffect.value = true
-    
+
     setTimeout(() => {
       showAddEffect.value = false
       bounceClass.value = ''
@@ -80,7 +83,7 @@ const toggleCart = () => {
   if ('vibrate' in navigator) {
     navigator.vibrate(50)
   }
-  
+
   cartStore.toggleCart()
 }
 
