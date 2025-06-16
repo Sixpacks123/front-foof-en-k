@@ -23,7 +23,6 @@ export default defineNuxtConfig({
   // =====================================
 
   site: {
-    url: process.env.SITE_URL || 'http://localhost:3000',
     name: 'Food en K - Food Truck Burger Artisanal',
     description: 'Découvrez Food en K, le food truck spécialisé dans les burgers artisanaux et les produits locaux. Réservez votre événement et savourez nos créations uniques.',
     defaultLocale: 'fr'
