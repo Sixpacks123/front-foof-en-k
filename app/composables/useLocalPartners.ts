@@ -2,22 +2,20 @@ import type { LocalPartner } from '~/types'
 
 export const useLocalPartners = () => {
   const { find } = useStrapi()
-  const toast = useToast()
 
   // Fetch local partners from Strapi
-  const { data: partnersData, pending: partnersPending, error: partnersError } = useLazyAsyncData(
+  const { data: partnersData, pending: partnersPending } = useLazyAsyncData(
     'local-partners',
-    () => find<LocalPartner>('local-partners', {
-      populate: ['logo']
-    }).catch((error) => {
-      console.error('Error fetching local partners:', error)
-      toast.add({
-        title: 'Erreur',
-        description: 'Impossible de charger les partenaires locaux',
-        color: 'error'
-      })
-      throw error
-    })
+    async () => {
+      try {
+        return await find<LocalPartner>('local-partners', {
+          populate: ['logo']
+        })
+      } catch {
+        // Silently handle the error - use fallback data
+        return null
+      }
+    }
   )
 
   // Fallback data for development
@@ -107,7 +105,7 @@ export const useLocalPartners = () => {
   })
 
   const isLoading = computed(() => partnersPending.value)
-  const hasError = computed(() => partnersError.value)
+  const hasError = computed(() => false) // Always false since we handle errors silently
 
   // Utility functions
   const getPartnerBySlug = (slug: string) => {

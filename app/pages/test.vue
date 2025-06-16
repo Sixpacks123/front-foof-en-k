@@ -5,7 +5,21 @@ import type { Location } from '~/types'
 const { fetchLocations } = useLocations()
 
 // Récupération des données
-const { data: locations, pending, error } = await useAsyncData('locations', () => fetchLocations())
+const { data: locations, pending } = await useAsyncData(
+  'locations',
+  async () => {
+    try {
+      return await fetchLocations()
+    } catch {
+      // Silently handle the error - no locations available
+      return []
+    }
+  },
+  {
+    default: () => [],
+    server: true
+  }
+)
 
 // Référence vers la carte
 const mapRef = ref()
@@ -39,17 +53,6 @@ useHead({
         </p>
       </div>
 
-      <!-- États de chargement et d'erreur -->
-      <UAlert
-        v-if="error"
-        color="error"
-        variant="subtle"
-        title="Erreur"
-        :description="error.message"
-        icon="i-heroicons-exclamation-triangle"
-        class="mb-8"
-      />
-
       <div
         v-if="pending"
         class="space-y-8"
@@ -75,7 +78,6 @@ useHead({
         <LocationsList
           :locations="locations"
           :pending="pending"
-          :error="error"
           @select="onLocationSelect"
         />
       </div>

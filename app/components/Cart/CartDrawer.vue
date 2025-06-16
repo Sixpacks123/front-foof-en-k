@@ -13,21 +13,18 @@
 
     <template #body>
       <!-- État vide -->
-      <UEmptyState
+      <div
         v-if="cartStore.isEmpty"
         icon="i-lucide-shopping-cart"
         title="Panier vide"
         description="Ajoutez des plats pour commencer votre commande"
       >
-        <template #actions>
-          <UButton
-            color="primary"
-            @click="navigateToMenu"
-          >
-            Voir le menu
-          </UButton>
-        </template>
-      </UEmptyState>
+        <UButton
+          color="primary"
+          label="Voir le menu"
+          @click="navigateToMenu"
+        />
+      </div>
 
       <!-- Liste des articles -->
       <div
@@ -182,7 +179,7 @@ const handleOrderAction = async (action: OrderAction) => {
 // Vider le panier directement
 const clearCart = () => {
   cartStore.clear()
-  
+
   toast.add({
     title: 'Panier vidé',
     description: 'Tous les articles ont été supprimés',

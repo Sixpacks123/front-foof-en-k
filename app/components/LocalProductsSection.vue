@@ -283,10 +283,9 @@
           </UButton>
         </div>
       </div>
-
       <!-- Call to action central -->
       <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 p-4 text-white transition-all duration-300 hover:scale-[1.02] hover:shadow-xl sm:p-6 sm:col-span-2 md:col-span-2">
-        <div class="absolute inset-0 bg-[url('/img/pattern.svg')] opacity-10" />
+        <div class="absolute inset-0 opacity-10" />
 
         <div class="relative z-10 flex h-full flex-col items-center justify-center text-center">
           <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-red-600 shadow-lg sm:mb-4 sm:h-16 sm:w-16">

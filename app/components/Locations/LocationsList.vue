@@ -6,9 +6,9 @@
           <h3 class="text-lg font-semibold">
             Liste des emplacements
           </h3>
-          <UBadge 
-            v-if="locations?.length" 
-            color="primary" 
+          <UBadge
+            v-if="locations?.length"
+            color="primary"
             variant="soft"
           >
             {{ locations.length }} emplacement{{ locations.length > 1 ? 's' : '' }}
@@ -18,26 +18,16 @@
 
       <div class="space-y-4">
         <!-- État de chargement -->
-        <div 
-          v-if="pending" 
+        <div
+          v-if="pending"
           class="space-y-4"
         >
-          <USkeleton 
-            v-for="i in 3" 
-            :key="i" 
-            class="h-32 w-full" 
+          <USkeleton
+            v-for="i in 3"
+            :key="i"
+            class="h-32 w-full"
           />
         </div>
-
-        <!-- Erreur -->
-        <UAlert
-          v-else-if="error"
-          color="error"
-          variant="subtle"
-          title="Erreur"
-          :description="error.message"
-          icon="i-heroicons-exclamation-triangle"
-        />
 
         <!-- Aucun emplacement -->
         <UAlert
@@ -50,8 +40,8 @@
         />
 
         <!-- Liste des emplacements -->
-        <div 
-          v-else 
+        <div
+          v-else
           class="grid gap-4"
         >
           <UCard
@@ -156,7 +146,6 @@ import type { Location } from '~/types'
 interface Props {
   locations?: Location[]
   pending?: boolean
-  error?: Error | null
 }
 
 defineProps<Props>()

@@ -426,11 +426,17 @@ definePageMeta({
   description: 'Contactez Food en K pour vos événements et commandes. Service traiteur professionnel avec food truck mobile.'
 })
 
-// SEO
-useSeoMeta({
-  title: 'Contact - Food en K | Traiteur & Events à Merdrignac',
-  description: 'Contactez Food en K pour vos événements, mariages, séminaires. Service traiteur professionnel avec food truck mobile.',
-  ogTitle: 'Contact Food en K - Service traiteur événementiel',
-  ogDescription: 'Organisez votre événement avec Food en K. Service traiteur professionnel, food truck mobile, menus personnalisés.'
+// SEO avec notre composable
+const { setPageSeo, setBreadcrumb } = useSeo()
+
+// Configuration SEO pour la page de contact
+setPageSeo('contact', {
+  image: '/img/og-default.jpg'
 })
+
+// Breadcrumb
+setBreadcrumb([
+  { name: 'Accueil', url: '/' },
+  { name: 'Contact', url: '/contact' }
+])
 </script>

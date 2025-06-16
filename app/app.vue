@@ -1,4 +1,7 @@
 <script setup>
+// Configuration SEO globale pour l'application
+const runtimeConfig = useRuntimeConfig()
+
 useHead({
   meta: [
     { name: 'viewport', content: 'width=device-width, initial-scale=1' }
@@ -7,20 +10,20 @@ useHead({
     { rel: 'icon', href: '/favicon.ico' }
   ],
   htmlAttrs: {
-    lang: 'en'
+    lang: 'fr'
   }
 })
 
-const title = 'Nuxt Starter Template'
-const description = 'Nuxt UI Pro is a collection of premium Vue components built on top of Nuxt UI to create beautiful & responsive Nuxt applications in minutes.'
+const title = 'Food en K - Food Truck Burger Artisanal'
+const description = 'Découvrez Food en K, le food truck spécialisé dans les burgers artisanaux et les produits locaux. Réservez votre événement et savourez nos créations uniques.'
 
 useSeoMeta({
   title,
   description,
   ogTitle: title,
   ogDescription: description,
-  ogImage: 'https://assets.hub.nuxt.com/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJodHRwczovL3VpLXByby1zdGFydGVyLm51eHQuZGV2IiwiaWF0IjoxNzM5NDYzMzk4fQ.XLzPkSW6nRbPW07QO1RkMwz_RAPA4KfeyrWrK3li9YI.jpg?theme=light',
-  twitterImage: 'https://assets.hub.nuxt.com/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJodHRwczovL3VpLXByby1zdGFydGVyLm51eHQuZGV2IiwiaWF0IjoxNzM5NDYzMzk4fQ.XLzPkSW6nRbPW07QO1RkMwz_RAPA4KfeyrWrK3li9YI.jpg?theme=light',
+  ogImage: `${runtimeConfig.public.siteUrl}/img/og-default.jpg`,
+  twitterImage: `${runtimeConfig.public.siteUrl}/img/og-default.jpg`,
   twitterCard: 'summary_large_image'
 })
 </script>
@@ -37,24 +40,7 @@ useSeoMeta({
 
     <USeparator icon="i-simple-icons-nuxtdotjs" />
 
-    <UFooter>
-      <template #left>
-        <p class="text-sm text-muted">
-          Copyright © {{ new Date().getFullYear() }}
-        </p>
-      </template>
-
-      <template #right>
-        <UButton
-          to="https://github.com/nuxt-ui-pro/starter"
-          target="_blank"
-          icon="i-simple-icons-github"
-          aria-label="GitHub"
-          color="neutral"
-          variant="ghost"
-        />
-      </template>
-    </UFooter>
+    <AppFooter />
 
     <!-- Cart Drawer -->
     <CartDrawer />

@@ -270,7 +270,7 @@
           <div class="relative aspect-[4/3] overflow-hidden">
             <NuxtImg
               v-if="product.images?.[0]"
-              v-bind="getOptimizedImageProps(product.images[0], product.name, 'card', 'medium')"
+              v-bind="getOptimizedProductImage(product.images[0], product.name)"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             />
             <div
@@ -369,7 +369,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Menu } from '~/types'
+import type { Menu, ProductImage } from '~/types'
 
 // Meta page
 definePageMeta({
@@ -391,7 +391,14 @@ const {
   fetchCategories
 } = useMenu()
 
-const { getOptimizedImageProps } = useStrapiImage()
+const { getCardImageProps } = useOptimizedImage()
+
+/**
+ * Get optimized image props for product cards
+ */
+const getOptimizedProductImage = (image: ProductImage, _productName: string) => {
+  return getCardImageProps(image, 'medium')
+}
 
 // State
 const activeMenuId = ref<number | null>(null)
@@ -471,13 +478,41 @@ const changeActiveMenu = (menuId: number) => {
   searchQuery.value = ''
 }
 
-// SEO
-useSeoMeta({
-  title: () => activeMenu.value ? `Menu ${activeMenu.value.name} - Food en K` : 'Le Menu - Food en K',
-  description: () => activeMenu.value?.description || 'Découvrez notre sélection de burgers artisanaux.',
-  ogTitle: () => activeMenu.value ? `Menu ${activeMenu.value.name} - Food en K` : 'Menu Food en K',
-  ogDescription: () => activeMenu.value?.description || 'Burgers artisanaux avec ingrédients frais et locaux.'
+// SEO avec notre composable
+const { setPageSeo, setBreadcrumb, setMenuSchema } = useSeo()
+
+// Configuration SEO pour la page des menus
+setPageSeo('menus', {
+  image: '/img/og-default.jpg'
 })
+
+// Breadcrumb
+setBreadcrumb([
+  { name: 'Accueil', url: '/' },
+  { name: 'Nos Menus', url: '/menus' }
+])
+
+// Schema pour les menus (quand ils sont chargés)
+watch(activeMenu, (menu) => {
+  if (menu && menu.products && menu.products.length > 0) {
+    const menuCategories = categories.value.map(category => ({
+      name: category.name,
+      description: category.description || '',
+      items: menu.products!
+        .filter(product => product.category?.id === category.id)
+        .map(product => ({
+          name: product.name,
+          description: product.description || '',
+          image: product.images && product.images.length > 0 ? `/img/${product.images[0]}` : undefined,
+          price: product.price
+        }))
+    })).filter(category => category.items.length > 0)
+    
+    if (menuCategories.length > 0) {
+      setMenuSchema(menuCategories)
+    }
+  }
+}, { immediate: true })
 </script>
 
 <style scoped>

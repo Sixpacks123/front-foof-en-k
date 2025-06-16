@@ -33,8 +33,8 @@ export const useLocations = () => {
       
       const rawLocations = response?.data || response || []
       return Array.isArray(rawLocations) ? rawLocations as Location[] : []
-    } catch (error) {
-      console.error('Error fetching locations:', error)
+    } catch {
+      // Silently handle errors - no locations available
       return []
     }
   }
@@ -50,9 +50,10 @@ export const useLocations = () => {
         }
       })
       
-      return response?.data || response || null
-    } catch (error) {
-      console.error('Error fetching location:', error)
+      const location = response?.data || response
+      return location && typeof location === 'object' ? location as Location : null
+    } catch {
+      // Silently handle errors - location not found
       return null
     }
   }

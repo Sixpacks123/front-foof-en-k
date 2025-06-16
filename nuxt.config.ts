@@ -7,7 +7,9 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxt/image',
     '@pinia/nuxt',
-    '@nuxtjs/leaflet'
+    '@nuxtjs/leaflet',
+    '@nuxtjs/sitemap',
+    '@nuxtjs/seo'
   ],
 
   devtools: {
@@ -15,6 +17,17 @@ export default defineNuxtConfig({
   },
 
   css: ['~/assets/css/main.css'],
+
+  // =====================================
+  // SEO CONFIGURATION
+  // =====================================
+
+  site: {
+    url: process.env.SITE_URL || 'http://localhost:3000',
+    name: 'Food en K - Food Truck Burger Artisanal',
+    description: 'Découvrez Food en K, le food truck spécialisé dans les burgers artisanaux et les produits locaux. Réservez votre événement et savourez nos créations uniques.',
+    defaultLocale: 'fr'
+  },
 
   // =====================================
   // RUNTIME CONFIG
@@ -40,13 +53,6 @@ export default defineNuxtConfig({
 
   build: {
     transpile: ['@headlessui/vue']
-  },
-
-  routeRules: {
-    '/': { prerender: true },
-    '/menus': { ssr: true, prerender: false }, // Server-side rendering for SEO
-    '/contact': { ssr: true, prerender: false },
-    '/event': { ssr: true, prerender: false }
   },
 
   future: {
@@ -82,7 +88,7 @@ export default defineNuxtConfig({
   },
   image: {
     quality: 80,
-    format: ['webp', 'avif', 'jpg'],
+    format: ['webp', 'jpg'],
     screens: {
       xs: 320,
       sm: 640,
@@ -94,5 +100,39 @@ export default defineNuxtConfig({
     strapi: {
       baseURL: `${process.env.STRAPI_URL || 'http://localhost:1337'}`
     }
+  },
+
+  ogImage: {
+    enabled: true,
+    defaults: {
+      component: 'OgImageDefault',
+      width: 1200,
+      height: 630
+    }
+  },
+
+  robots: {
+    allow: ['/', '/menus', '/contact', '/emplacements', '/events'],
+    disallow: ['/admin', '/api'],
+    sitemap: '/sitemap.xml'
+  },
+
+  schemaOrg: {
+    identity: {
+      type: 'Organization',
+      name: 'Food en K',
+      url: process.env.SITE_URL || 'http://localhost:3000',
+      logo: '/img/logo.png'
+    }
+  },
+
+  seo: {
+    redirectToCanonicalSiteUrl: true
+  },
+
+  sitemap: {
+    sources: [
+      '/sitemap.xml'
+    ]
   }
 })

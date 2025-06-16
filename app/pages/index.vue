@@ -22,11 +22,19 @@
         }
       ]"
     >
-      <img
-        src="/img/Truck.png"
-        alt="App screenshot"
+      <NuxtImg
+        :src="heroImageUrl"
+        alt="Food en K - Food truck burgers artisanaux"
         class="rounded-lg shadow-2xl ring ring-default"
-      >
+        width="800"
+        height="600"
+        priority
+        loading="eager"
+        format="webp"
+        quality="85"
+        sizes="(max-width: 768px) 100vw, 800px"
+        style="aspect-ratio: 4/3; object-fit: cover;"
+      />
     </UPageHero>
 
     <!-- Stats Marquee Enhanced -->
@@ -289,7 +297,7 @@
               <!-- Product image if available -->
               <NuxtImg
                 v-if="burgerDuMoment.images?.[0]"
-                v-bind="getOptimizedImageProps(burgerDuMoment.images[0], burgerDuMoment.name, 'card', 'medium')"
+                v-bind="optimizedBurgerImage"
                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
               <!-- Fallback placeholder -->
@@ -343,6 +351,7 @@
 
     <!-- Events Component -->
     <FoodTruckEventSection />
+    
     <!-- Galerie photos -->
     <UPageSection>
       <Galerie />
@@ -454,12 +463,18 @@ import LocalProductsSection from '~/components/LocalProductsSection.vue'
 // =====================================
 
 const { fetchLocations } = useLocations()
-const { getOptimizedImageProps } = useStrapiImage()
 
 // Récupération des emplacements pour la section preview
 const { data: locations, pending: locationsPending } = await useAsyncData(
   'locations-preview',
-  () => fetchLocations(),
+  async () => {
+    try {
+      return await fetchLocations()
+    } catch {
+      // Silently handle the error - no locations available
+      return []
+    }
+  },
   {
     default: () => [],
     server: true
@@ -472,14 +487,37 @@ definePageMeta({
   description: 'Découvrez nos burgers faits maison et notre service traiteur pour tous vos événements à Merdrignac.'
 })
 
-// SEO
-useSeoMeta({
-  title: 'Food en K - Burgers artisanaux & Traiteur événementiel',
-  description: 'Découvrez nos burgers faits maison et notre service traiteur pour tous vos événements. Produits locaux, viande bovine bretonne.',
-  ogTitle: 'Food en K - Burgers artisanaux à Merdrignac',
-  ogDescription: 'Burgers à la française avec viande bovine bretonne et ingrédients locaux. Service traiteur pour vos événements.',
-  ogImage: '/og-foodenk.jpg'
+// =====================================
+// IMAGE OPTIMIZATION
+// =====================================
+
+const { getOptimizedUrl, getCardImageProps } = useOptimizedImage()
+
+// Optimize hero image
+const heroImageUrl = getOptimizedUrl('/img/Truck.png', {
+  width: 800,
+  height: 600,
+  quality: 85,
+  format: 'webp'
 })
+
+// Optimized burger image
+const optimizedBurgerImage = computed(() => {
+  if (!burgerDuMoment.value?.images?.[0]) return {}
+  
+  return getCardImageProps(burgerDuMoment.value.images[0], 'medium')
+})
+
+// SEO avec notre composable
+const { setPageSeo, setLocalBusinessSchema } = useSeo()
+
+// Configuration SEO pour la page d'accueil
+setPageSeo('home', {
+  image: '/img/og-default.jpg'
+})
+
+// Schema pour entreprise locale
+setLocalBusinessSchema()
 
 // =====================================
 // BURGER DU MOMENT
@@ -494,26 +532,28 @@ const {
 } = useBurgerDuMoment()
 
 // Fetch burger du moment data
-const { data: burgerDuMoment, error } = await useAsyncData(
+const { data: burgerDuMoment } = await useAsyncData(
   'burger-du-moment',
-  () => fetchBurgerDuMoment(),
+  async () => {
+    try {
+      return await fetchBurgerDuMoment()
+    } catch {
+      // Silently handle the error - no burger du moment available
+      return null
+    }
+  },
   {
     default: () => null,
     server: true
   }
 )
 
-// Handle fetch error
-if (error.value) {
-  console.error('Error fetching burger du moment:', error.value)
-}
-
 // Computed values for template
 const ingredientsList = computed(() => {
   return burgerDuMoment.value ? getIngredientsList(burgerDuMoment.value) : []
 })
 
-const productImage = computed(() => {
+const _productImage = computed(() => {
   return burgerDuMoment.value ? getProductImage(burgerDuMoment.value) : null
 })
 

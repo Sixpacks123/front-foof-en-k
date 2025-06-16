@@ -43,8 +43,8 @@ export const useBurgerDuMoment = () => {
       
       const products = response?.data || response || []
       return Array.isArray(products) && products.length > 0 ? products[0] as Product : null
-    } catch (error) {
-      console.error('Error fetching burger du moment:', error)
+    } catch {
+      // Silently handle errors - no burger du moment available
       return null
     }
   }

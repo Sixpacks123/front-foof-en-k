@@ -66,8 +66,8 @@ export const useMenu = () => {
       
       const rawMenus = response?.data || response || []
       return Array.isArray(rawMenus) ? rawMenus as Menu[] : []
-    } catch (error) {
-      console.error('Error fetching menus:', error)
+    } catch {
+      // Silently handle the error
       return []
     }
   }
@@ -85,8 +85,8 @@ export const useMenu = () => {
       
       const rawCategories = response?.data || response || []
       return Array.isArray(rawCategories) ? rawCategories as Category[] : []
-    } catch (error) {
-      console.error('Error fetching categories:', error)
+    } catch {
+      // Silently handle the error
       return []
     }
   }
@@ -119,8 +119,8 @@ export const useMenu = () => {
       
       const rawProducts = response?.data || response || []
       return Array.isArray(rawProducts) ? rawProducts as Product[] : []
-    } catch (error) {
-      console.error('Error fetching products:', error)
+    } catch {
+      // Silently handle the error
       return []
     }
   }
@@ -291,11 +291,8 @@ export const useMenu = () => {
 
     try {
       const { addToCart: addProductToCart } = useCart()
-      const success = await addProductToCart(product, quantity)
-      
-      if (success) {
-        showProductModal.value = false
-      }
+      await addProductToCart(product, quantity)
+      showProductModal.value = false
     } catch {
       toast.add({
         title: 'Erreur',

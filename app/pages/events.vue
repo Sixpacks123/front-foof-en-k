@@ -580,12 +580,17 @@ definePageMeta({
   description: 'Food Truck pour tous vos événements en Bretagne. Mariages, entreprise, associations. Service traiteur mobile de qualité.'
 })
 
-// SEO
-useSeoMeta({
-  title: 'Food Truck Événements - Traiteur Mobile en Bretagne | Food en K',
-  description: 'Food en K se déplace pour vos événements partout en Bretagne. Mariages, team building, festivals. Service traiteur mobile avec burgers artisanaux. Devis gratuit.',
-  ogTitle: 'Food Truck pour vos Événements - Food en K',
-  ogDescription: 'Service traiteur mobile en Bretagne. Food truck pour mariages, entreprises, associations. Burgers artisanaux et produits locaux.',
-  ogImage: '/og-foodenk-events.jpg'
+// SEO avec notre composable
+const { setPageSeo, setBreadcrumb } = useSeo()
+
+// Configuration SEO pour la page des événements
+setPageSeo('events', {
+  image: '/img/og-default.jpg'
 })
+
+// Breadcrumb
+setBreadcrumb([
+  { name: 'Accueil', url: '/' },
+  { name: 'Événements', url: '/events' }
+])
 </script>

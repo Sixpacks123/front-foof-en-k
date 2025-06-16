@@ -1,0 +1,22 @@
+{
+  "name": "Food en K - Food Truck Burger Artisanal",
+  "short_name": "Food en K",
+  "description": "Découvrez Food en K, le food truck spécialisé dans les burgers artisanaux et les produits locaux",
+  "theme_color": "#dc2626",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/img/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/img/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["food", "restaurant", "catering"]
+}
