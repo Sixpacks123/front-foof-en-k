@@ -1,14 +1,14 @@
 <template>
-  <div class="bg-gray-50">
+  <div>
     <!-- Page Header -->
     <UContainer class="py-8">
       <div class="text-center">
-        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+        <h1 class="text-3xl sm:text-4xl font-bold mb-4">
           {{ activeMenu ? `Menu ${activeMenu.name}` : 'Le Menu' }}
         </h1>
         <p
           v-if="activeMenu?.description"
-          class="text-lg text-gray-600 max-w-2xl mx-auto"
+          class="text-lg max-w-2xl mx-auto"
         >
           {{ activeMenu.description }}
         </p>
@@ -51,12 +51,12 @@
     >
       <UIcon
         name="i-lucide-calendar-x"
-        class="w-16 h-16 text-gray-400 mx-auto mb-4"
+        class="w-16 h-16  mx-auto mb-4"
       />
       <h3 class="text-xl font-semibold mb-2">
         Aucun menu actif
       </h3>
-      <p class="text-gray-600">
+      <p>
         Aucun menu n'est actuellement disponible.
       </p>
     </UContainer>
@@ -68,7 +68,7 @@
     >
       <section
         id="filters-section"
-        class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100"
+        class=" rounded-2xl p-6 shadow-sm border "
       >
         <!-- Section Header -->
         <div class="flex items-center gap-3 mb-6">
@@ -77,7 +77,7 @@
             class="w-5 h-5 text-primary-500"
             aria-hidden="true"
           />
-          <h2 class="text-lg font-semibold text-gray-800">
+          <h2 class="text-lg font-semibold ">
             Recherche et filtres
           </h2>
         </div>
@@ -263,7 +263,7 @@
         <div
           v-for="product in filteredProducts"
           :key="product.id"
-          class="group relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-primary-200"
+          class="group relative rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-primary-200"
         >
           <!-- Product Image -->
 
@@ -279,7 +279,7 @@
             >
               <UIcon
                 name="i-lucide-chef-hat"
-                class="w-12 h-12 text-gray-400 mb-2"
+                class="w-12 h-12  mb-2"
               />
               <span class="text-sm text-gray-500 font-medium">Photo bientôt disponible</span>
             </div>
@@ -300,7 +300,7 @@
 
             <!-- Price overlay -->
             <div class="absolute bottom-3 left-3">
-              <div class="bg-white/95 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg">
+              <div class="/95 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg">
                 <span class="text-lg font-bold text-gray-900">{{ product.price?.toFixed(2) }}€</span>
               </div>
             </div>
@@ -311,7 +311,7 @@
             <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors truncate">
               {{ product.name }}
             </h3>
-            <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+            <p class=" text-sm mb-4 line-clamp-2">
               {{ product.description || 'Un délicieux plat préparé avec des ingrédients frais et de qualité.' }}
             </p>
 
@@ -320,7 +320,7 @@
               <div
                 v-for="(feature, index) in getProductFeatures(product).slice(0, 3)"
                 :key="index"
-                class="flex items-center text-sm text-gray-600"
+                class="flex items-center text-sm "
               >
                 <UIcon
                   name="i-lucide-check"
@@ -356,12 +356,12 @@
     >
       <UIcon
         name="i-lucide-search-x"
-        class="w-16 h-16 text-gray-400 mx-auto mb-4"
+        class="w-16 h-16  mx-auto mb-4"
       />
       <h3 class="text-xl font-semibold mb-2">
         Aucun produit trouvé
       </h3>
-      <p class="text-gray-600">
+      <p class="">
         Essayez de modifier votre recherche.
       </p>
     </UContainer>
