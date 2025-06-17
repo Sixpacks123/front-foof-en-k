@@ -269,7 +269,6 @@
                   Photo prochainement disponible
                 </p>
               </div>
-              {{ burgerDuMoment.url }}
 
               <!-- Decorative elements -->
               <div class="absolute top-4 left-4 w-16 h-16 bg-yellow-400/20 rounded-full blur-xl" />
@@ -322,22 +321,53 @@
       />
     </UPageSection>
 
-    <!-- CTA Simple vers les pages dédiées -->
+    <!-- CTA Section Améliorée -->
     <UPageSection
-      title="Prêt à découvrir Food en K ?"
-      description="Contactez-nous pour vos commandes ou événements, ou découvrez notre carte complète"
+      title="Votre burger vous attend !"
+      description="Ne laissez pas passer l'occasion ! Contactez-nous dès maintenant ou découvrez notre gamme complète."
+      class=" bg-primary-200 dark:bg-neutral-800"
     >
+      <!-- CTA Principal -->
+      <div class="text-center mb-12">
+        <UButton
+          size="xl"
+          color="primary"
+          to="tel:0624316790"
+          class="mr-4 mb-4"
+        >
+          <UIcon
+            name="i-lucide-phone"
+            class="w-5 h-5 mr-2"
+          />
+          Appeler : 06 24 31 67 90
+        </UButton>
+
+        <UButton
+          size="xl"
+          variant="outline"
+          to="/menus"
+          class="mb-4"
+        >
+          <UIcon
+            name="i-lucide-menu"
+            class="w-5 h-5 mr-2"
+          />
+          Voir nos burgers
+        </UButton>
+      </div>
+
+      <!-- Actions secondaires -->
       <UPageGrid class="lg:grid-cols-3">
         <UPageCard
-          icon="i-lucide-utensils"
-          title="Découvrir nos menus"
-          description="Consultez notre carte complète de burgers artisanaux et spécialités locales."
-          to="/menus"
+          icon="i-lucide-map-pin"
+          title="Nous localiser"
+          description="Trouvez notre food truck près de chez vous cette semaine."
+          to="/contact"
         >
           <template #icon>
-            <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mb-6">
+            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6">
               <UIcon
-                name="i-lucide-utensils"
+                name="i-lucide-map-pin"
                 class="w-8 h-8 text-white"
               />
             </div>
@@ -346,42 +376,17 @@
             <UButton
               variant="outline"
               block
-              to="/menus"
+              to="/contact"
             >
-              Voir les menus
-            </UButton>
-          </template>
-        </UPageCard>
-
-        <UPageCard
-          icon="i-lucide-phone"
-          title="Commander maintenant"
-          description="Appelez-nous directement pour passer votre commande ou réserver."
-          to="tel:0624316790"
-        >
-          <template #icon>
-            <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-6">
-              <UIcon
-                name="i-lucide-phone"
-                class="w-8 h-8 text-white"
-              />
-            </div>
-          </template>
-          <template #footer>
-            <UButton
-              color="primary"
-              block
-              to="tel:0624316790"
-            >
-              06 24 31 67 90
+              Voir nos emplacements
             </UButton>
           </template>
         </UPageCard>
 
         <UPageCard
           icon="i-lucide-party-popper"
-          title="Organiser un événement"
-          description="Service traiteur pour mariages, anniversaires, événements d'entreprise."
+          title="Événements & Traiteur"
+          description="Mariages, anniversaires, événements d'entreprise sur mesure."
           to="/contact"
         >
           <template #icon>
@@ -394,11 +399,36 @@
           </template>
           <template #footer>
             <UButton
-              variant="outline"
+              color="primary"
               block
               to="/contact"
             >
-              Nous contacter
+              Demander un devis
+            </UButton>
+          </template>
+        </UPageCard>
+
+        <UPageCard
+          icon="i-lucide-utensils"
+          title="Notre carte complète"
+          description="Découvrez tous nos burgers, accompagnements et desserts."
+          to="/menus"
+        >
+          <template #icon>
+            <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-6">
+              <UIcon
+                name="i-lucide-utensils"
+                class="w-8 h-8 text-white"
+              />
+            </div>
+          </template>
+          <template #footer>
+            <UButton
+              variant="outline"
+              block
+              to="/menus"
+            >
+              Voir tous les menus
             </UButton>
           </template>
         </UPageCard>
@@ -411,6 +441,49 @@
 import { NuxtImg } from '#components'
 import FoodTruckEventSection from '~/components/FoodTruckEventSection.vue'
 import LocalProductsSection from '~/components/LocalProductsSection.vue'
+
+// =====================================
+// FEATURES DATA
+// =====================================
+
+const _features = [
+  {
+    icon: 'i-lucide-hamburger',
+    title: 'Burgers artisanaux',
+    description: 'Pain de la Boulangerie 1863, viande VBF locale, ingrédients frais et sauces maison préparées chaque jour avec passion.',
+    iconBg: 'bg-gradient-to-br from-primary-500 to-primary-600'
+  },
+  {
+    icon: 'i-lucide-party-popper',
+    title: 'Traiteur événementiel',
+    description: 'Mariages, anniversaires, événements d\'entreprise : un service personnalisé et de qualité adapté à tous vos besoins spéciaux.',
+    iconBg: 'bg-gradient-to-br from-purple-500 to-purple-600'
+  },
+  {
+    icon: 'i-lucide-smartphone',
+    title: 'Commande facilitée',
+    description: 'Bientôt disponible : commandez facilement en ligne pour un retrait rapide ou contactez-nous directement.',
+    iconBg: 'bg-gradient-to-br from-blue-500 to-blue-600'
+  },
+  {
+    icon: 'i-lucide-chef-hat',
+    title: 'Savoir-faire artisanal',
+    description: 'Chaque préparation respecte les traditions culinaires françaises avec une touche d\'innovation moderne.',
+    iconBg: 'bg-gradient-to-br from-orange-500 to-orange-600'
+  },
+  {
+    icon: 'i-lucide-recycle',
+    title: 'Démarche éco-responsable',
+    description: 'Emballages recyclables, circuits courts et réduction du gaspillage alimentaire au cœur de nos préoccupations.',
+    iconBg: 'bg-gradient-to-br from-green-500 to-green-600'
+  },
+  {
+    icon: 'i-lucide-clock-3',
+    title: 'Service rapide',
+    description: 'Préparation minute de vos commandes pour une fraîcheur optimale et un service efficace.',
+    iconBg: 'bg-gradient-to-br from-teal-500 to-teal-600'
+  }
+]
 
 // =====================================
 // EMPLACEMENTS
@@ -447,8 +520,8 @@ definePageMeta({
 
 const { getOptimizedUrl, getCardImageProps } = useOptimizedImage()
 
-// Optimize hero image
-const heroImageUrl = getOptimizedUrl('/img/Truck.png', {
+// Optimize hero image (unused but kept for potential future use)
+const _heroImageUrl = getOptimizedUrl('/img/Truck.png', {
   width: 800,
   height: 600,
   quality: 85,

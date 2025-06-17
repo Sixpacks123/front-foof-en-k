@@ -11,7 +11,7 @@
     <template #content>
       <div class="p-6 space-y-4">
         <h3 class="text-lg font-semibold mb-4">
-          {{ modalTitle }}
+          Actualités importantes
         </h3>
 
         <div class="space-y-4">

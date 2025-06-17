@@ -9,9 +9,9 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  companyName: 'Inspiria',
+  companyName: 'FoodEnk',
   showSocialLinks: true,
-  showNewsletter: true
+  showNewsletter: false
 })
 
 // Navigation links organized by sections
@@ -40,18 +40,6 @@ const navigationLinks: NavigationMenuItem[] = [
 
 // Legal & Info links
 const legalLinks: NavigationMenuItem[] = [
-  {
-    label: 'Mentions Légales',
-    to: '/mentions-legales'
-  },
-  {
-    label: 'Politique de Confidentialité',
-    to: '/politique-confidentialite'
-  },
-  {
-    label: 'CGV',
-    to: '/cgv'
-  },
   {
     label: 'Plan du Site',
     to: '/sitemap'
@@ -129,195 +117,197 @@ const currentYear = new Date().getFullYear()
 </script>
 
 <template>
-  <UFooter>
-    <!-- Top section with detailed content -->
-    <template #top>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- Company Info -->
-        <div class="space-y-4">
-          <div class="flex items-center gap-2">
-            <img
-              src="/img/logo.png"
-              alt="Logo"
-              class="h-8 w-auto"
-            >
-            <h3 class="text-lg font-semibold">
-              {{ props.companyName }}
-            </h3>
-          </div>
-          <p class="text-sm text-muted leading-relaxed">
-            Découvrez notre cuisine de rue authentique avec des ingrédients frais et locaux.
-            Suivez notre food truck pour une expérience gastronomique unique !
-          </p>
-
-          <!-- Contact Info -->
-          <div class="space-y-2 text-sm text-muted">
+  <UContainer>
+    <UFooter>
+      <!-- Top section with detailed content -->
+      <template #top>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Company Info -->
+          <div class="space-y-4">
             <div class="flex items-center gap-2">
-              <UIcon
-                name="i-heroicons-phone"
-                class="w-4 h-4"
-              />
-              <span>+33 1 23 45 67 89</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <UIcon
-                name="i-heroicons-envelope"
-                class="w-4 h-4"
-              />
-              <span>contact@inspiria-foodtruck.fr</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <UIcon
-                name="i-heroicons-map-pin"
-                class="w-4 h-4"
-              />
-              <span>Paris, Île-de-France</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Navigation Links -->
-        <div class="space-y-4">
-          <h3 class="text-sm font-semibold uppercase tracking-wider">
-            Navigation
-          </h3>
-          <nav
-            class="space-y-2"
-            aria-label="Navigation links"
-          >
-            <NuxtLink
-              v-for="link in navigationLinks"
-              :key="`nav-${link.label}`"
-              :to="link.to"
-              class="block text-sm text-muted hover:text-primary transition-colors duration-200"
-            >
-              {{ link.label }}
-            </NuxtLink>
-          </nav>
-        </div>
-
-        <!-- Legal Links -->
-        <div class="space-y-4">
-          <h3 class="text-sm font-semibold uppercase tracking-wider">
-            Informations
-          </h3>
-          <nav
-            class="space-y-2"
-            aria-label="Legal and information links"
-          >
-            <NuxtLink
-              v-for="link in legalLinks"
-              :key="`legal-${link.label}`"
-              :to="link.to"
-              class="block text-sm text-muted hover:text-primary transition-colors duration-200"
-            >
-              {{ link.label }}
-            </NuxtLink>
-          </nav>
-        </div>
-
-        <!-- Newsletter & Social -->
-        <div class="space-y-4">
-          <h3 class="text-sm font-semibold uppercase tracking-wider">
-            Restez Connecté
-          </h3>
-
-          <!-- Newsletter Signup -->
-          <div
-            v-if="props.showNewsletter"
-            class="space-y-3"
-          >
-            <p class="text-sm text-muted">
-              Inscrivez-vous à notre newsletter pour recevoir nos dernières actualités et offres spéciales.
-            </p>
-            <form
-              class="space-y-2"
-              @submit.prevent="handleNewsletterSubmit"
-            >
-              <UInput
-                v-model="newsletterEmail"
-                type="email"
-                placeholder="Votre email"
-                required
-                :disabled="isNewsletterLoading"
-              />
-              <UButton
-                type="submit"
-                :loading="isNewsletterLoading"
-                :disabled="!newsletterEmail || isNewsletterLoading"
-                size="sm"
-                block
+              <img
+                src="/img/logo.png"
+                alt="Logo"
+                class="h-8 w-auto"
               >
-                S'inscrire
-              </UButton>
-            </form>
+              <h3 class="text-lg font-semibold">
+                {{ props.companyName }}
+              </h3>
+            </div>
+            <p class="text-sm text-muted leading-relaxed">
+              Découvrez notre cuisine de rue authentique avec des ingrédients frais et locaux.
+              Suivez notre food truck pour une expérience gastronomique unique !
+            </p>
+
+            <!-- Contact Info -->
+            <div class="space-y-2 text-sm text-muted">
+              <div class="flex items-center gap-2">
+                <UIcon
+                  name="i-heroicons-phone"
+                  class="w-4 h-4"
+                />
+                <span>+33 1 23 45 67 89</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <UIcon
+                  name="i-heroicons-envelope"
+                  class="w-4 h-4"
+                />
+                <span>contact@foodenk.fr</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <UIcon
+                  name="i-heroicons-map-pin"
+                  class="w-4 h-4"
+                />
+                <span>Paris, Île-de-France</span>
+              </div>
+            </div>
           </div>
 
-          <!-- Social Links -->
-          <div
-            v-if="props.showSocialLinks"
-            class="space-y-3"
-          >
-            <p class="text-sm text-muted">
-              Suivez-nous :
-            </p>
-            <div class="flex gap-2">
-              <UButton
-                v-for="social in socialLinks"
-                :key="social.label"
-                :icon="social.icon"
-                :to="social.to"
-                :aria-label="social.label"
-                color="neutral"
-                variant="ghost"
-                size="sm"
-                target="_blank"
-                class="hover:scale-110 transition-transform duration-200"
-              />
+          <!-- Navigation Links -->
+          <div class="space-y-4">
+            <h3 class="text-sm font-semibold uppercase tracking-wider">
+              Navigation
+            </h3>
+            <nav
+              class="space-y-2"
+              aria-label="Navigation links"
+            >
+              <NuxtLink
+                v-for="link in navigationLinks"
+                :key="`nav-${link.label}`"
+                :to="link.to"
+                class="block text-sm text-muted hover:text-primary transition-colors duration-200"
+              >
+                {{ link.label }}
+              </NuxtLink>
+            </nav>
+          </div>
+
+          <!-- Legal Links -->
+          <div class="space-y-4">
+            <h3 class="text-sm font-semibold uppercase tracking-wider">
+              Informations
+            </h3>
+            <nav
+              class="space-y-2"
+              aria-label="Legal and information links"
+            >
+              <NuxtLink
+                v-for="link in legalLinks"
+                :key="`legal-${link.label}`"
+                :to="link.to"
+                class="block text-sm text-muted hover:text-primary transition-colors duration-200"
+              >
+                {{ link.label }}
+              </NuxtLink>
+            </nav>
+          </div>
+
+          <!-- Newsletter & Social -->
+          <div class="space-y-4">
+            <h3 class="text-sm font-semibold uppercase tracking-wider">
+              Restez Connecté
+            </h3>
+
+            <!-- Newsletter Signup -->
+            <div
+              v-if="props.showNewsletter"
+              class="space-y-3"
+            >
+              <p class="text-sm text-muted">
+                Inscrivez-vous à notre newsletter pour recevoir nos dernières actualités et offres spéciales.
+              </p>
+              <form
+                class="space-y-2"
+                @submit.prevent="handleNewsletterSubmit"
+              >
+                <UInput
+                  v-model="newsletterEmail"
+                  type="email"
+                  placeholder="Votre email"
+                  required
+                  :disabled="isNewsletterLoading"
+                />
+                <UButton
+                  type="submit"
+                  :loading="isNewsletterLoading"
+                  :disabled="!newsletterEmail || isNewsletterLoading"
+                  size="sm"
+                  block
+                >
+                  S'inscrire
+                </UButton>
+              </form>
+            </div>
+
+            <!-- Social Links -->
+            <div
+              v-if="props.showSocialLinks"
+              class="space-y-3"
+            >
+              <p class="text-sm text-muted">
+                Suivez-nous :
+              </p>
+              <div class="flex gap-2">
+                <UButton
+                  v-for="social in socialLinks"
+                  :key="social.label"
+                  :icon="social.icon"
+                  :to="social.to"
+                  :aria-label="social.label"
+                  color="neutral"
+                  variant="ghost"
+                  size="sm"
+                  target="_blank"
+                  class="hover:scale-110 transition-transform duration-200"
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </template>
+      </template>
 
-    <!-- Bottom section with copyright and main navigation -->
-    <template #left>
-      <p class="text-sm text-muted">
-        Copyright © {{ currentYear }} {{ props.companyName }}. Tous droits réservés.
-      </p>
-    </template>
+      <!-- Bottom section with copyright and main navigation -->
+      <template #left>
+        <p class="text-sm text-muted">
+          Copyright © {{ currentYear }} {{ props.companyName }}. Tous droits réservés.
+        </p>
+      </template>
 
-    <!-- Center navigation for larger screens -->
-    <UNavigationMenu
-      :items="navigationLinks"
-      variant="link"
-      class="hidden lg:flex"
-    />
+      <!-- Center navigation for larger screens -->
+      <UNavigationMenu
+        :items="navigationLinks"
+        variant="link"
+        class="hidden lg:flex"
+      />
 
-    <!-- Right section with quick actions -->
-    <template #right>
-      <div class="flex items-center gap-2">
-        <!-- GitHub Link (if applicable) -->
-        <UButton
-          icon="i-simple-icons-github"
-          color="neutral"
-          variant="ghost"
-          to="https://github.com"
-          target="_blank"
-          aria-label="GitHub"
-          size="sm"
-        />
+      <!-- Right section with quick actions -->
+      <template #right>
+        <div class="flex items-center gap-2">
+          <!-- GitHub Link (if applicable) -->
+          <UButton
+            icon="i-simple-icons-github"
+            color="neutral"
+            variant="ghost"
+            to="https://github.com"
+            target="_blank"
+            aria-label="GitHub"
+            size="sm"
+          />
 
-        <!-- Back to top button -->
-        <UButton
-          icon="i-heroicons-arrow-up"
-          color="neutral"
-          variant="ghost"
-          aria-label="Retour en haut"
-          size="sm"
-          @click="scrollToTop"
-        />
-      </div>
-    </template>
-  </UFooter>
+          <!-- Back to top button -->
+          <UButton
+            icon="i-heroicons-arrow-up"
+            color="neutral"
+            variant="ghost"
+            aria-label="Retour en haut"
+            size="sm"
+            @click="scrollToTop"
+          />
+        </div>
+      </template>
+    </UFooter>
+  </UContainer>
 </template>
