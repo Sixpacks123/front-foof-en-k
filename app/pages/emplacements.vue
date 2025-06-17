@@ -128,34 +128,6 @@ useHead({
 
 <template>
   <div>
-    <!-- Hero Section -->
-    <UPageHero
-      title="Trouvez-nous près de chez vous"
-      description="Notre food truck sillonne la Bretagne pour vous apporter nos burgers artisanaux."
-      :links="[
-        {
-          label: 'Nous localiser',
-          color: 'primary',
-          size: 'xl',
-          icon: 'i-heroicons-map-pin',
-          click: () => requestGeolocation()
-        }
-      ]"
-    >
-      <template #headline>
-        <UBadge
-          variant="subtle"
-          size="lg"
-        >
-          <UIcon
-            name="i-heroicons-truck"
-            class="w-4 h-4 mr-2"
-          />
-          {{ allLocations?.length || 0 }} emplacement{{ (allLocations?.length || 0) > 1 ? 's' : '' }}
-        </UBadge>
-      </template>
-    </UPageHero>
-
     <UContainer class="py-12">
       <!-- Géolocalisation -->
       <UCard class="mb-8">
