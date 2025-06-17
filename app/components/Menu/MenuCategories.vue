@@ -1,37 +1,24 @@
 <template>
-  <BaseContainer
-    :loading="pending"
-    :is-empty="!categories?.length"
-    empty-title="Aucune catégorie"
-    empty-description="Aucune catégorie de produits n'est disponible pour le moment."
-    empty-icon="i-lucide-folder-x"
-  >
-    <div class="flex flex-wrap gap-3 justify-center">
-      <UButton
-        :color="selectedCategory === null ? 'primary' : 'neutral'"
-        :variant="selectedCategory === null ? 'solid' : 'outline'"
-        size="md"
-        class="rounded-full"
-        @click="$emit('update:selectedCategory', null)"
-      >
-        Tous ({{ products?.length || 0 }})
-      </UButton>
-      <UButton
-        v-for="category in categories"
-        :key="category.id"
-        :color="selectedCategory === category.id ? 'primary' : 'neutral'"
-        :variant="selectedCategory === category.id ? 'solid' : 'outline'"
-        size="md"
-        class="rounded-full"
-        @click="$emit('update:selectedCategory', category.id)"
-      >
-        {{ category.name }} ({{ getProductCountByCategory(category.id) }})
-      </UButton>
-    </div>
-  </BaseContainer>
+    <BaseContainer
+      :loading="pending"
+      :is-empty="!categories?.length"
+      empty-title="Aucune catégorie"
+      empty-description="Aucune catégorie de produits n'est disponible pour le moment."
+      empty-icon="i-lucide-folder-x"
+    >
+      <UTabs
+        v-model="selectedTab"
+        color="primary"
+        variant="link"
+        :content="false"
+        :items="items"
+        class="w-full"
+      />
+    </BaseContainer>
 </template>
 
 <script setup lang="ts">
+import type { TabsItem } from '@nuxt/ui'
 import type { Product, Category } from '~/types'
 
 interface Props {
@@ -46,9 +33,26 @@ interface Emits {
 }
 
 const props = defineProps<Props>()
-defineEmits<Emits>()
+const emit = defineEmits<Emits>()
 
 const getProductCountByCategory = (categoryId: number) => {
   return props.products.filter(p => p.category?.id === categoryId).length
 }
+
+const items = computed<TabsItem[]>(() => [
+  {
+    label: `Tous (${props.products?.length || 0})`,
+    value: null
+  },
+  ...props.categories.map(category => ({
+    label: `${category.name} (${getProductCountByCategory(category.id)})`,
+    value: category.id,
+    icon: category.icon || 'i-lucide-folder'
+  }))
+])
+
+const selectedTab = computed({
+  get: () => props.selectedCategory,
+  set: value => emit('update:selectedCategory', value)
+})
 </script>

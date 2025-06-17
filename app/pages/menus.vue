@@ -60,129 +60,17 @@
         Aucun menu n'est actuellement disponible.
       </p>
     </UContainer>
-
-    <!-- Search and Filters Section -->
-    <UContainer
+<UContainer>
+    <MenuCategories
       v-if="activeMenu"
-      class="py-8"
-    >
-      <section
-        id="filters-section"
-        class=" rounded-2xl p-6 shadow-sm border "
-      >
-        <!-- Section Header -->
-        <div class="flex items-center gap-3 mb-6">
-          <UIcon
-            name="i-lucide-search"
-            class="w-5 h-5 text-primary-500"
-            aria-hidden="true"
-          />
-          <h2 class="text-lg font-semibold ">
-            Recherche et filtres
-          </h2>
-        </div>
-
-        <!-- Search Input -->
-        <div class="mb-6">
-          <div class="relative">
-            <UInput
-              id="search-input"
-              v-model="searchQuery"
-              placeholder="Rechercher un plat, ingrédient ou catégorie..."
-              icon="i-lucide-search"
-              size="lg"
-              class="w-full"
-              :disabled="pending"
-              aria-label="Rechercher des produits dans le menu"
-              aria-describedby="search-help"
-            />
-            <div
-              id="search-help"
-              class="sr-only"
-            >
-              Tapez pour rechercher parmi {{ products.length }} produits disponibles
-            </div>
-            <UButton
-              v-if="searchQuery"
-              variant="ghost"
-              size="sm"
-              icon="i-lucide-x"
-              class="absolute right-2 top-1/2 -translate-y-1/2"
-              aria-label="Effacer la recherche"
-              @click="clearSearch"
-            />
-          </div>
-        </div>
-
-        <!-- Categories Filter -->
-        <div>
-          <div class="flex items-center gap-2 mb-4">
-            <UIcon
-              name="i-lucide-filter"
-              class="w-4 h-4 text-gray-500"
-              aria-hidden="true"
-            />
-            <h3 class="text-sm font-medium text-gray-700">
-              Filtrer par catégorie
-            </h3>
-          </div>
-
-          <div
-            v-if="pending"
-            class="flex flex-wrap gap-3"
-            aria-label="Chargement des catégories"
-          >
-            <USkeleton
-              v-for="i in 4"
-              :key="i"
-              class="h-10 w-28 rounded-full"
-            />
-          </div>
-          <div
-            v-else
-            class="flex flex-wrap gap-3"
-            role="radiogroup"
-            aria-label="Filtres par catégorie"
-          >
-            <UButton
-              :color="selectedCategory === null ? 'primary' : 'neutral'"
-              :variant="selectedCategory === null ? 'solid' : 'outline'"
-              size="md"
-              class="rounded-full hover:scale-105 transition-all duration-200"
-              :aria-pressed="selectedCategory === null"
-              aria-label="Afficher tous les produits"
-              @click="selectedCategory = null"
-            >
-              <UIcon
-                name="i-lucide-grid-3x3"
-                class="w-4 h-4 mr-2"
-                aria-hidden="true"
-              />
-              Tous ({{ products?.length || 0 }})
-            </UButton>
-            <UButton
-              v-for="category in categories"
-              :key="(category as any).id"
-              :color="selectedCategory === (category as any).id ? 'primary' : 'neutral'"
-              :variant="selectedCategory === (category as any).id ? 'solid' : 'outline'"
-              size="md"
-              class="rounded-full hover:scale-105 transition-all duration-200"
-              :aria-pressed="selectedCategory === (category as any).id"
-              :aria-label="`Filtrer par ${(category as any).name}`"
-              @click="selectedCategory = (category as any).id"
-            >
-              <UIcon
-                name="i-lucide-tag"
-                class="w-4 h-4 mr-2"
-                aria-hidden="true"
-              />
-              {{ (category as any).name }} ({{ getProductCountByCategory(products, (category as any).id) }})
-            </UButton>
-          </div>
-        </div>
-      </section>
-    </UContainer>
-
+      :selected-category="selectedCategory"
+      :categories="categories"
+      :products="products"
+      :pending="pending"
+      class="mb-6"
+      @update:selected-category="selectedCategory = $event"
+    />
+</UContainer>
     <!-- Results Counter -->
     <UContainer
       v-if="activeMenu"
@@ -200,7 +88,7 @@
           >
             {{ filteredProducts.length }} produit{{ filteredProducts.length > 1 ? 's' : '' }}
             <span class="text-primary-600">trouvé{{ filteredProducts.length > 1 ? 's' : '' }}</span>
-            {{ selectedCategory !== null || searchQuery ? ' correspondant à vos critères' : ' disponible' }}{{ filteredProducts.length > 1 ? 's' : '' }}
+            {{ selectedCategory !== null ? ' correspondant à vos critères' : ' disponible' }}{{ filteredProducts.length > 1 ? 's' : '' }}
           </p>
           <USkeleton
             v-else
@@ -208,14 +96,14 @@
           />
         </div>
         <div
-          v-if="selectedCategory !== null || searchQuery"
+          v-if="selectedCategory !== null"
           class="flex gap-2"
         >
           <UButton
             variant="ghost"
             size="sm"
             icon="i-lucide-x"
-            @click="selectedCategory = null; searchQuery = ''"
+            @click="selectedCategory = null"
           >
             Effacer les filtres
           </UButton>
@@ -255,99 +143,12 @@
     </UContainer>
 
     <!-- Products Grid -->
-    <UContainer
-      v-else-if="filteredProducts.length > 0 && activeMenu"
-      class="pb-12"
-    >
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        <div
-          v-for="product in filteredProducts"
-          :key="product.id"
-          class="group relative rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-primary-200"
-        >
-          <!-- Product Image -->
-
-          <div class="relative aspect-[4/3] overflow-hidden">
-            <NuxtImg
-              v-if="product.images?.[0]"
-              v-bind="getOptimizedProductImage(product.images[0], product.name)"
-              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-            />
-            <div
-              v-else
-              class="flex flex-col items-center justify-center h-full bg-gradient-to-br from-gray-50 to-gray-100 border-b border-gray-200"
-            >
-              <UIcon
-                name="i-lucide-chef-hat"
-                class="w-12 h-12  mb-2"
-              />
-              <span class="text-sm text-gray-500 font-medium">Photo bientôt disponible</span>
-            </div>
-
-            <!-- Badge overlay -->
-            <div
-              v-if="getProductBadge(product)"
-              class="absolute top-3 right-3"
-            >
-              <UBadge
-                :color="getProductBadge(product)?.color || 'primary'"
-                variant="solid"
-                class="shadow-lg"
-              >
-                {{ getProductBadge(product)?.label }}
-              </UBadge>
-            </div>
-
-            <!-- Price overlay -->
-            <div class="absolute bottom-3 left-3">
-              <div class="/95 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg">
-                <span class="text-lg font-bold text-gray-900">{{ product.price?.toFixed(2) }}€</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Product Content -->
-          <div class="p-6">
-            <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors truncate">
-              {{ product.name }}
-            </h3>
-            <p class=" text-sm mb-4 line-clamp-2">
-              {{ product.description || 'Un délicieux plat préparé avec des ingrédients frais et de qualité.' }}
-            </p>
-
-            <!-- Features -->
-            <div class="space-y-2 mb-6">
-              <div
-                v-for="(feature, index) in getProductFeatures(product).slice(0, 3)"
-                :key="index"
-                class="flex items-center text-sm "
-              >
-                <UIcon
-                  name="i-lucide-check"
-                  class="w-4 h-4 text-green-500 mr-2 flex-shrink-0"
-                />
-                <span class="truncate">{{ feature }}</span>
-              </div>
-            </div>
-
-            <!-- Action Button -->
-            <UButton
-              :disabled="!product.available"
-              color="primary"
-              size="lg"
-              class="w-full group-hover:scale-105 transition-transform"
-              @click="addToCart(product)"
-            >
-              <UIcon
-                name="i-lucide-shopping-cart"
-                class="w-4 h-4 mr-2"
-              />
-              {{ product.available ? 'Ajouter au panier' : 'Non disponible' }}
-            </UButton>
-          </div>
-        </div>
-      </div>
-    </UContainer>
+    <MenuProductsGrid
+      v-if="filteredProducts.length > 0 && activeMenu"
+      :products="filteredProducts"
+      :get-product-badge="getProductBadge"
+      @add-to-cart="addToCart"
+    />
 
     <!-- Empty State -->
     <UContainer
@@ -369,7 +170,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Menu, ProductImage } from '~/types'
+import type { Menu } from '~/types'
 
 // Meta page
 definePageMeta({
@@ -379,10 +180,7 @@ definePageMeta({
 
 // Composables
 const {
-  searchQuery,
   selectedCategory,
-  getProductCountByCategory,
-  getProductFeatures,
   getProductBadge,
   findActiveMenu,
   createMenuOptions,
@@ -390,15 +188,6 @@ const {
   fetchMenus,
   fetchCategories
 } = useMenu()
-
-const { getCardImageProps } = useOptimizedImage()
-
-/**
- * Get optimized image props for product cards
- */
-const getOptimizedProductImage = (image: ProductImage, _productName: string) => {
-  return getCardImageProps(image, 'medium')
-}
 
 // State
 const activeMenuId = ref<number | null>(null)
@@ -454,28 +243,13 @@ const filteredProducts = computed(() => {
     filtered = filtered.filter(p => p.category?.id === selectedCategory.value)
   }
 
-  // Filter by search
-  if (searchQuery.value) {
-    const query = searchQuery.value.toLowerCase()
-    filtered = filtered.filter(p =>
-      p.name.toLowerCase().includes(query)
-      || p.description?.toLowerCase().includes(query)
-      || p.category?.name.toLowerCase().includes(query)
-    )
-  }
-
   return filtered
 })
 
 // Methods
-const clearSearch = () => {
-  searchQuery.value = ''
-}
-
 const changeActiveMenu = (menuId: number) => {
   activeMenuId.value = menuId
   selectedCategory.value = null
-  searchQuery.value = ''
 }
 
 // SEO avec notre composable
@@ -507,7 +281,7 @@ watch(activeMenu, (menu) => {
           price: product.price
         }))
     })).filter(category => category.items.length > 0)
-    
+
     if (menuCategories.length > 0) {
       setMenuSchema(menuCategories)
     }
@@ -515,6 +289,3 @@ watch(activeMenu, (menu) => {
 }, { immediate: true })
 </script>
 
-<style scoped>
-/* Utilisation uniquement de Tailwind et Nuxt UI - pas de styles personnalisés */
-</style>

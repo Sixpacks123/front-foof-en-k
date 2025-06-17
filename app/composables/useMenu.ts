@@ -190,7 +190,7 @@ export const useMenu = () => {
         features.push(`⚠️ Allergènes: ${allergens.map(a => a.name).join(', ')}`)
       }
 
-      const mainIngredients = product.ingredients.filter(i => !i.isAllergen).slice(0, 3)
+      const mainIngredients = product.ingredients.filter(i => !i.isAllergen).slice(0, 10)
       if (mainIngredients.length > 0) {
         features.push(`${mainIngredients.map(i => i.name).join(', ')}`)
       }
