@@ -1,442 +1,365 @@
 <template>
   <div>
-    <!-- Hero Section -->
-    <UPageHero
-      title="Contactez-nous"
-      description="Une question ? Un événement à organiser ? Envoyez-nous un message, nous vous répondrons rapidement."
-      :links="[
-        {
-          label: 'Nous appeler',
-          to: 'tel:0624316790',
-          icon: 'i-lucide-phone',
-          size: 'lg',
-          color: 'primary'
-        }
-      ]"
-    >
-      <template #headline>
-        <UBadge
-          variant="subtle"
-          size="lg"
-          class="mb-4"
-        >
-          <UIcon
-            name="i-lucide-message-circle"
-            class="w-4 h-4 mr-2"
-          />
-          Réponse sous 24h
-        </UBadge>
-      </template>
-    </UPageHero>
+    <UContainer class="py-8">
+      <!-- En-tête simple -->
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold mb-2">
+          Contact
+        </h1>
+        <p class="text-gray-600">
+          Contactez-nous pour organiser votre événement
+        </p>
+      </div>
 
-    <!-- Informations de contact -->
-    <UPageSection
-      title="Nos coordonnées"
-      description="Retrouvez-nous facilement"
-    >
-      <UPageGrid class="lg:grid-cols-3">
-        <UPageCard
-          icon="i-lucide-phone"
-          title="Téléphone"
-          description="06 24 31 67 90"
-          to="tel:0624316790"
-        />
-        <UPageCard
-          icon="i-lucide-mail"
-          title="Email"
-          description="contact@foodenk.fr"
-          to="mailto:contact@foodenk.fr"
-        />
-        <UPageCard
-          icon="i-lucide-map-pin"
-          title="Localisation"
-          description="Merdrignac et toute la Bretagne"
-        />
-      </UPageGrid>
-    </UPageSection>
+      <div class="grid lg:grid-cols-4 gap-8">
+        <!-- Informations de contact compactes -->
+        <div class="lg:col-span-1">
+          <div class="space-y-4">
+            <div class="text-center">
+              <UButton
+                to="tel:0624316790"
+                color="primary"
+                size="lg"
+                icon="i-heroicons-phone"
+                label="06 24 31 67 90"
+                block
+              />
+            </div>
+            <div class="text-center">
+              <UButton
+                to="mailto:contact@foodenk.fr"
+                variant="outline"
+                size="lg"
+                icon="i-heroicons-envelope"
+                label="Envoyer un email"
+                block
+              />
+            </div>
+          </div>
+        </div>
 
-    <!-- Formulaire de contact -->
-    <UPageSection
-      title="Envoyez-nous un message"
-      description="Remplissez le formulaire ci-dessous pour nous contacter"
-    >
-      <div class="max-w-2xl mx-auto">
-        <UCard>
-          <!-- Messages d'état -->
-          <UAlert
-            v-if="isSuccess"
-            color="success"
-            variant="soft"
-            title="Message envoyé avec succès !"
-            description="Nous vous répondrons dans les plus brefs délais."
-            class="mb-6"
-          />
-
-          <UAlert
-            v-if="error"
-            color="error"
-            variant="soft"
-            :title="error"
-            class="mb-6"
-          />
-
-          <!-- Formulaire -->
-          <UForm
-            v-if="!isSuccess"
-            :state="form"
-            class="space-y-6"
-            @submit="onSubmit"
-          >
-            <!-- Informations personnelles -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <UFormGroup
-                label="Nom complet"
-                name="name"
-                required
-              >
-                <UInput
-                  v-model="form.name"
-                  placeholder="Votre nom et prénom"
-                  icon="i-lucide-user"
-                  :disabled="isSubmitting"
-                />
-              </UFormGroup>
-
-              <UFormGroup
-                label="Email"
-                name="email"
-                required
-              >
-                <UInput
-                  v-model="form.email"
-                  type="email"
-                  placeholder="votre@email.com"
-                  icon="i-lucide-mail"
-                  :disabled="isSubmitting"
-                />
-              </UFormGroup>
+        <!-- Formulaire de contact -->
+        <div class="lg:col-span-3">
+          <UCard class="p-8">
+            <div class="mb-6">
+              <h2 class="text-xl font-bold mb-2">
+                Envoyez-nous un message
+              </h2>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <UFormGroup
-                label="Téléphone"
-                name="phone"
-              >
-                <UInput
-                  v-model="form.phone"
-                  placeholder="06 XX XX XX XX"
-                  icon="i-lucide-phone"
-                  :disabled="isSubmitting"
-                />
-              </UFormGroup>
-
-              <UFormGroup
+            <!-- Formulaire avec validation conditionnelle -->
+            <UForm
+              :schema="schema"
+              :state="state"
+              class="space-y-2 w-full"
+              @submit="onSubmit"
+            >
+              <!-- Type de demande -->
+              <UFormField
                 label="Type de demande"
                 name="requestType"
                 required
+                description="Sélectionnez le type de votre demande pour personnaliser le formulaire"
               >
-                <USelect
-                  v-model="form.requestType"
-                  :options="requestTypeOptions"
+                <UInputMenu
+                  v-model="state.requestType"
+                  :items="requestTypeOptions"
                   placeholder="Choisissez votre demande..."
-                  :disabled="isSubmitting"
+                  icon="i-heroicons-chat-bubble-left-right"
                 />
-              </UFormGroup>
-            </div>
+              </UFormField>
 
-            <!-- Champs événement -->
-            <div
-              v-if="form.requestType === 'event'"
-              class="space-y-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
-            >
-              <div class="flex items-center gap-2 mb-3">
-                <UIcon
-                  name="i-lucide-calendar"
-                  class="w-5 h-5 text-primary-500"
-                />
-                <h4 class="font-medium text-gray-900 dark:text-white">
-                  Détails de l'événement
-                </h4>
-              </div>
-              
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <UFormGroup
-                  label="Type d'événement"
-                  name="eventType"
+              <!-- Informations personnelles -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <UFormField
+                  label="Nom complet"
+                  name="name"
                   required
-                >
-                  <USelect
-                    v-model="form.eventType"
-                    :options="eventTypeOptions"
-                    placeholder="Sélectionnez le type..."
-                    :disabled="isSubmitting"
-                  />
-                </UFormGroup>
-
-                <UFormGroup
-                  label="Date souhaitée"
-                  name="eventDate"
-                  required
+                  description="Votre nom et prénom complets"
                 >
                   <UInput
-                    v-model="form.eventDate"
-                    type="date"
-                    :min="minDate"
-                    icon="i-lucide-calendar-days"
-                    :disabled="isSubmitting"
+                    v-model="state.name"
+                    placeholder="Votre nom et prénom"
+                    icon="i-heroicons-user"
                   />
-                </UFormGroup>
-              </div>
+                </UFormField>
 
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <UFormGroup
-                  label="Nombre d'invités"
-                  name="estimatedGuests"
+                <UFormField
+                  label="Email"
+                  name="email"
                   required
+                  description="Nous utiliserons cet email pour vous répondre"
                 >
                   <UInput
-                    v-model="form.estimatedGuests"
-                    type="number"
-                    min="50"
-                    max="500"
-                    placeholder="ex: 100"
-                    icon="i-lucide-users"
-                    :disabled="isSubmitting"
+                    v-model="state.email"
+                    type="email"
+                    placeholder="votre@email.com"
+                    icon="i-heroicons-envelope"
                   />
-                  <template #help>
-                    <span class="text-xs text-gray-500">Minimum 50 personnes</span>
-                  </template>
-                </UFormGroup>
-
-                <UFormGroup
-                  label="Heure souhaitée"
-                  name="eventTime"
-                >
-                  <USelect
-                    v-model="form.eventTime"
-                    :options="timeOptions"
-                    placeholder="Moment de la journée..."
-                    :disabled="isSubmitting"
-                  />
-                </UFormGroup>
+                </UFormField>
               </div>
 
-              <UFormGroup
-                label="Lieu de l'événement"
-                name="eventLocation"
-                required
+              <UFormField
+                label="Téléphone (optionnel)"
+                name="phone"
+                description="Pour vous joindre plus facilement"
               >
                 <UInput
-                  v-model="form.eventLocation"
-                  placeholder="Ville, adresse ou lieu-dit"
-                  icon="i-lucide-map-pin"
-                  :disabled="isSubmitting"
+                  v-model="state.phone"
+                  placeholder="06 XX XX XX XX"
+                  icon="i-heroicons-phone"
                 />
-              </UFormGroup>
+              </UFormField>
 
-              <UFormGroup
-                label="Budget approximatif"
-                name="budget"
+              <!-- Champs spécifiques aux événements -->
+              <template v-if="state.requestType?.value === 'event'">
+                <div class="border-t pt-6">
+                  <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <UIcon
+                      name="i-heroicons-calendar-days"
+                      class="w-5 h-5 text-purple-600"
+                    />
+                    Détails de l'événement
+                  </h4>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <UFormField
+                      label="Date de l'événement"
+                      name="eventDate"
+                      :required="state.requestType?.value === 'event'"
+                      description="Date prévue pour votre événement"
+                    >
+                      <UInput
+                        v-model="state.eventDate"
+                        type="date"
+                        icon="i-heroicons-calendar"
+                      />
+                    </UFormField>
+
+                    <UFormField
+                      label="Nombre d'invités"
+                      name="guestCount"
+                      :required="state.requestType?.value === 'event'"
+                      description="Nombre approximatif d'invités"
+                    >
+                      <UInput
+                        v-model="state.guestCount"
+                        type="number"
+                        placeholder="Ex: 50"
+                        icon="i-heroicons-users"
+                      />
+                    </UFormField>
+                  </div>
+
+                  <UFormField
+                    label="Lieu de l'événement"
+                    name="eventLocation"
+                    :required="state.requestType?.value === 'event'"
+                    description="Adresse où se déroulera l'événement"
+                  >
+                    <UInput
+                      v-model="state.eventLocation"
+                      placeholder="Adresse complète ou ville"
+                      icon="i-heroicons-map-pin"
+                    />
+                  </UFormField>
+                </div>
+              </template>
+
+              <!-- Message -->
+              <UFormField
+                label="Votre message"
+                name="message"
+                required
+                class="w-full"
+                description="Décrivez votre demande en détail pour que nous puissions mieux vous aider"
               >
-                <USelect
-                  v-model="form.budget"
-                  :options="budgetOptions"
-                  placeholder="Votre budget..."
-                  :disabled="isSubmitting"
+                <UTextarea
+                  v-model="state.message"
+                  :rows="6"
+                  class="w-full"
+                  :placeholder="getMessagePlaceholder()"
                 />
-              </UFormGroup>
-            </div>
-
-            <!-- Message -->
-            <UFormGroup
-              label="Message"
-              name="message"
-              required
-            >
-              <UTextarea
-                v-model="form.message"
-                :rows="5"
-                :placeholder="getMessagePlaceholder()"
-                :disabled="isSubmitting"
-              />
-            </UFormGroup>
-
-            <!-- Bouton d'envoi -->
-            <UButton
-              type="submit"
-              size="lg"
-              color="primary"
-              block
-              :loading="isSubmitting"
-              :disabled="isSubmitting"
-              icon="i-lucide-send"
-            >
-              {{ isSubmitting ? 'Envoi en cours...' : 'Envoyer le message' }}
-            </UButton>
-          </UForm>
-        </UCard>
+              </UFormField>
+              <!-- Bouton d'envoi -->
+              <UButton
+                type="submit"
+                size="lg"
+                color="primary"
+                icon="i-heroicons-paper-airplane"
+                block
+              >
+                {{ getSubmitButtonText() }}
+              </UButton>
+            </UForm>
+          </UCard>
+        </div>
       </div>
-    </UPageSection>
+    </UContainer>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { ContactFormData } from '~/composables/useContactForm'
+import * as v from 'valibot'
+import type { FormSubmitEvent } from '@nuxt/ui'
 
-// Composables
-const { submitContactForm, isSubmitting, isSuccess, error, resetForm } = useContactForm()
-const { isValidEmail, isRequired, isValidPhone } = useValidation()
+// Types pour les options
+type RequestTypeOption = {
+  label: string
+  value: string
+  icon?: string
+}
 
-// Formulaire
-const form = reactive<ContactFormData>({
+// Validation conditionnelle personnalisée
+const validateConditionalFields = (data: Record<string, unknown>) => {
+  const errors: Record<string, string> = {}
+
+  if ((data.requestType as RequestTypeOption)?.value === 'event') {
+    if (!data.eventDate) errors.eventDate = 'Date de l\'événement requise'
+    if (!data.eventLocation) errors.eventLocation = 'Lieu de l\'événement requis'
+    if (!data.guestCount) errors.guestCount = 'Nombre d\'invités requis'
+    else if (!/^\d+$/.test(data.guestCount as string)) errors.guestCount = 'Nombre d\'invités invalide'
+  }
+
+  return Object.keys(errors).length > 0 ? errors : null
+}
+
+// Schéma de validation Valibot simple
+const schema = v.object({
+  requestType: v.pipe(v.object({
+    label: v.string(),
+    value: v.string(),
+    icon: v.optional(v.string())
+  }), v.nonEmpty('Veuillez sélectionner un type de demande')),
+  name: v.pipe(v.string(), v.minLength(2, 'Le nom doit contenir au moins 2 caractères')),
+  email: v.pipe(v.string(), v.email('Email invalide')),
+  phone: v.optional(v.pipe(v.string(), v.regex(/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/, 'Numéro de téléphone invalide'))),
+  message: v.pipe(v.string(), v.minLength(10, 'Le message doit contenir au moins 10 caractères')),
+  // Champs optionnels pour la validation de base
+  eventDate: v.optional(v.string()),
+  eventLocation: v.optional(v.string()),
+  guestCount: v.optional(v.string())
+})
+
+type Schema = v.InferOutput<typeof schema>
+
+// État du formulaire
+const state = reactive({
+  requestType: null as RequestTypeOption | null,
   name: '',
   email: '',
   phone: '',
-  requestType: 'info',
   message: '',
   eventDate: '',
-  eventTime: '',
   eventLocation: '',
-  estimatedGuests: undefined,
-  eventType: undefined,
-  budget: undefined
+  guestCount: ''
 })
 
 // Options pour les selects
 const requestTypeOptions = [
-  { label: '🎉 Organiser un événement', value: 'event' },
-  { label: '📋 Demande d\'information', value: 'info' },
-  { label: '🍔 Commander des burgers', value: 'order' },
-  { label: '💬 Autre demande', value: 'other' }
+  { label: 'Demande d\'information', value: 'info', icon: 'i-heroicons-information-circle' },
+  { label: 'Organiser un événement', value: 'event', icon: 'i-heroicons-calendar-days' },
+  { label: 'Partenariat', value: 'partnership', icon: 'i-heroicons-handshake' },
+  { label: 'Autre demande', value: 'other', icon: 'i-heroicons-chat-bubble-left-right' }
 ]
 
-const eventTypeOptions = [
-  { label: '💒 Mariage', value: 'wedding' },
-  { label: '🏢 Événement d\'entreprise', value: 'corporate' },
-  { label: '🎂 Anniversaire / Fête privée', value: 'birthday' },
-  { label: '🎪 Festival / Fête locale', value: 'festival' },
-  { label: '🎊 Inauguration', value: 'inauguration' },
-  { label: '📊 Séminaire', value: 'seminar' },
-  { label: '🎯 Autre type d\'événement', value: 'other' }
-]
+// Toast pour les notifications
+const toast = useToast()
 
-const budgetOptions = [
-  { label: '💰 Moins de 1000€', value: 'less-than-1000' },
-  { label: '💳 Entre 1000€ et 2000€', value: '1000-2000' },
-  { label: '💎 Entre 2000€ et 5000€', value: '2000-5000' },
-  { label: '🏆 Plus de 5000€', value: 'more-than-5000' },
-  { label: '💬 À discuter', value: 'to-discuss' }
-]
-
-const timeOptions = [
-  { label: '🌅 Midi (11h-14h)', value: 'lunch' },
-  { label: '☀️ Après-midi (14h-18h)', value: 'afternoon' },
-  { label: '🌆 Soir (18h-22h)', value: 'evening' },
-  { label: '⏰ Toute la journée', value: 'all-day' }
-]
-
-// Date minimum (aujourd'hui + 1 semaine)
-const minDate = computed(() => {
-  const date = new Date()
-  date.setDate(date.getDate() + 7)
-  return date.toISOString().split('T')[0]
-})
-
-// Placeholder dynamique pour le message
+// Fonctions helper pour l'UX dynamique
 const getMessagePlaceholder = () => {
-  switch (form.requestType) {
-    case 'order':
-      return 'Indiquez-nous vos burgers préférés, les quantités désirées et l\'horaire de récupération...'
+  switch (state.requestType?.value) {
     case 'event':
-      return 'Décrivez votre événement : ambiance souhaitée, contraintes particulières, services additionnels, allergies alimentaires...'
-    case 'info':
-      return 'Posez-nous toutes vos questions sur nos services, nos menus, nos tarifs...'
+      return 'Décrivez votre événement : type (mariage, anniversaire, etc.), ambiance souhaitée, contraintes particulières...'
+    case 'partnership':
+      return 'Présentez votre projet de partenariat : type de collaboration, objectifs, proposition de valeur...'
     default:
-      return 'Décrivez votre demande en détail, nous vous répondrons rapidement...'
+      return 'Décrivez votre demande en détail...'
   }
 }
 
-// Form validation
-const validateForm = () => {
-  const errors: string[] = []
-  
-  if (!isRequired(form.name)) errors.push('Le nom est requis')
-  if (!isRequired(form.email)) errors.push('L\'email est requis')
-  else if (!isValidEmail(form.email)) errors.push('L\'email n\'est pas valide')
-  if (form.phone && !isValidPhone(form.phone)) errors.push('Le numéro de téléphone n\'est pas valide')
-  if (!isRequired(form.requestType)) errors.push('Le type de demande est requis')
-  if (!isRequired(form.message)) errors.push('Le message est requis')
-  
-  // Validation spécifique pour les événements
-  if (form.requestType === 'event') {
-    if (!form.eventType) errors.push('Le type d\'événement est requis')
-    if (!form.eventDate) errors.push('La date de l\'événement est requise')
-    if (!form.eventLocation) errors.push('Le lieu de l\'événement est requis')
-    if (!form.estimatedGuests || form.estimatedGuests < 50) errors.push('Le nombre d\'invités doit être d\'au moins 50 personnes')
+const getSubmitButtonText = () => {
+  switch (state.requestType?.value) {
+    case 'event':
+      return 'Organiser mon événement'
+    case 'partnership':
+      return 'Proposer un partenariat'
+    default:
+      return 'Envoyer le message'
   }
-  
-  return errors
 }
 
-// Soumission du formulaire
-const onSubmit = async (event: Event) => {
-  event.preventDefault()
-  
-  // Validate form
-  const validationErrors = validateForm()
-  if (validationErrors.length > 0) {
-    // Show validation errors to user
-    const { addNotification } = useAppState()
-    addNotification({
-      title: 'Erreurs de validation',
-      description: validationErrors.join(', '),
-      type: 'error'
+// Fonction pour reset les champs conditionnels
+const resetConditionalFields = () => {
+  Object.assign(state, {
+    eventDate: '',
+    eventLocation: '',
+    guestCount: ''
+  })
+}
+
+// Watch pour reset les champs quand on change de type
+watch(() => state.requestType, () => {
+  resetConditionalFields()
+})
+
+// Soumission du formulaire avec validation conditionnelle
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  try {
+    // Validation conditionnelle manuelle
+    const conditionalErrors = validateConditionalFields(event.data)
+    if (conditionalErrors) {
+      // Afficher les erreurs (Nuxt UI gère automatiquement l'affichage)
+      throw new Error('Veuillez remplir tous les champs obligatoires')
+    }
+
+    // Simulation d'envoi API
+    await new Promise(resolve => setTimeout(resolve, 2000))
+
+    // Succès
+    toast.add({
+      title: 'Message envoyé avec succès !',
+      description: 'Nous vous répondrons dans les plus brefs délais.',
+      color: 'success',
+      timeout: 5000
     })
-    return
+
+    // Reset du formulaire
+    Object.assign(state, {
+      requestType: null,
+      name: '',
+      email: '',
+      phone: '',
+      message: '',
+      eventDate: '',
+      eventLocation: '',
+      guestCount: ''
+    })
+
+    console.log('Form data:', event.data)
+  } catch {
+    toast.add({
+      title: 'Erreur lors de l\'envoi',
+      description: 'Une erreur est survenue, veuillez réessayer.',
+      color: 'error'
+    })
   }
-  
-  await submitContactForm(form)
 }
 
-// Reset du formulaire après succès
-watch(isSuccess, (newValue) => {
-  if (newValue) {
-    setTimeout(() => {
-      resetForm()
-      Object.assign(form, {
-        name: '',
-        email: '',
-        phone: '',
-        requestType: 'info',
-        message: '',
-        eventDate: '',
-        eventTime: '',
-        eventLocation: '',
-        estimatedGuests: undefined,
-        eventType: undefined,
-        budget: undefined
-      })
-    }, 3000)
-  }
-})
-
-// Meta
-definePageMeta({
-  title: 'Contact - Food en K',
-  description: 'Contactez Food en K pour vos événements et commandes. Service traiteur professionnel avec food truck mobile.'
-})
-
-// SEO avec notre composable
+// SEO
 const { setPageSeo, setBreadcrumb } = useSeo()
 
-// Configuration SEO pour la page de contact
 setPageSeo('contact', {
   image: '/img/og-default.jpg'
 })
 
-// Breadcrumb
 setBreadcrumb([
   { name: 'Accueil', url: '/' },
   { name: 'Contact', url: '/contact' }
 ])
+
+definePageMeta({
+  title: 'Contact - Food en K',
+  description: 'Contactez Food en K pour organiser votre événement ou commander nos burgers artisanaux. Réponse garantie sous 24h.'
+})
 </script>

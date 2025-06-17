@@ -521,17 +521,6 @@
           </template>
         </UPageCard>
       </UPageGrid>
-
-      <div class="text-center mt-12">
-        <UAlert
-          icon="i-lucide-clock"
-          color="primary"
-          variant="soft"
-          title="Réponse rapide"
-          description="Nous nous engageons à vous répondre dans les 24h pour étudier votre demande et vous proposer la meilleure solution."
-          class="max-w-2xl mx-auto"
-        />
-      </div>
     </UPageSection>
   </div>
 </template>
