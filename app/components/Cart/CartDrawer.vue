@@ -64,7 +64,7 @@
                 <span class="text-sm">Supprimer</span>
               </div>
             </div>
-            
+
             <!-- CartItem avec transformation -->
             <div
               class="relative z-10 transition-transform duration-200"
@@ -80,7 +80,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Bouton pour ajouter d'autres produits -->
         <div class="pt-4 border-t border-neutral-200 dark:border-neutral-700">
           <UButton
@@ -212,7 +212,7 @@ const handleTouchStart = (e: TouchEvent, itemId: string) => {
 
 const handleTouchMove = (e: TouchEvent) => {
   if (!swipeState.value.isDragging || !swipeState.value.itemId) return
-  
+
   e.preventDefault()
   const deltaX = e.touches[0].clientX - swipeState.value.startX
   swipeState.value.x = Math.min(0, deltaX)
@@ -220,23 +220,23 @@ const handleTouchMove = (e: TouchEvent) => {
 
 const handleTouchEnd = () => {
   if (!swipeState.value.isDragging || !swipeState.value.itemId) return
-  
+
   const shouldDelete = swipeState.value.x < -60
-  
+
   if (shouldDelete) {
     const itemId = swipeState.value.itemId
     const item = cartStore.items.find(i => i.id === itemId)
-    
+
     // Suppression directe sans passer par removeItem pour éviter le doublon
     cartStore.removeItem(itemId)
-    
+
     toast.add({
       title: '🗑️ Supprimé par swipe',
       description: `${item?.product.name || 'Article'} retiré du panier`,
       color: 'error'
     })
   }
-  
+
   // Reset state
   swipeState.value = {
     itemId: null,

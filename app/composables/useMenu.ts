@@ -149,7 +149,9 @@ export const useMenu = () => {
       const query = filters.searchQuery.toLowerCase().trim()
       filtered = filtered.filter((p) => {
         const matchName = p.name.toLowerCase().includes(query)
-        const matchDescription = p.description?.toLowerCase().includes(query) || false
+        const matchDescription = typeof p.description === 'string'
+          ? p.description.toLowerCase().includes(query)
+          : false
         const matchCategory = p.category?.name.toLowerCase().includes(query) || false
         const matchIngredients = p.ingredients?.some(ing =>
           ing.name.toLowerCase().includes(query)
@@ -251,6 +253,37 @@ export const useMenu = () => {
     return query.trim().substring(0, 100) // Limit to 100 characters
   }
 
+  /**
+   * Get category icon based on category name
+   */
+  const getCategoryIcon = (categoryName: string): string => {
+    const name = categoryName.toLowerCase()
+    
+    if (name.includes('Burgers')) {
+      return 'i-lucide-hamburger'
+    } else if (name.includes('Les Frites')) {
+      return 'i-lucide-zap'
+    } else if (name.includes('extra')) {
+      return 'i-lucide-plus-circle'
+    } else if (name.includes('sauce')) {
+      return 'i-lucide-droplets'
+    } else if (name.includes('boisson')) {
+      return 'i-lucide-coffee'
+    } else if (name.includes('dessert')) {
+      return 'i-lucide-cookie'
+    } else if (name.includes('salade')) {
+      return 'i-lucide-leaf'
+    } else if (name.includes('pizza')) {
+      return 'i-lucide-circle'
+    } else if (name.includes('sandwich')) {
+      return 'i-lucide-square'
+    } else if (name.includes('wrap')) {
+      return 'i-lucide-package'
+    } else {
+      return 'i-lucide-utensils'
+    }
+  }
+
   // =====================================
   // ACTIONS
   // =====================================
@@ -333,6 +366,7 @@ export const useMenu = () => {
     findActiveMenu,
     createMenuOptions,
     sanitizeSearchQuery,
+    getCategoryIcon,
 
     // Actions
     clearAllFilters,

@@ -16,6 +16,10 @@
           class="rounded-full whitespace-nowrap flex-shrink-0"
           @click="$emit('update:selectedCategory', null)"
         >
+          <UIcon
+            name="i-lucide-grid-3x3"
+            class="w-4 h-4 mr-2"
+          />
           Tous ({{ products?.length || 0 }})
         </UButton>
         <UButton
@@ -27,6 +31,10 @@
           class="rounded-full whitespace-nowrap flex-shrink-0"
           @click="$emit('update:selectedCategory', category.id)"
         >
+          <UIcon
+            :name="getCategoryIcon(category.name)"
+            class="w-4 h-4 mr-2"
+          />
           {{ category.name }} ({{ getProductCountByCategory(category.id) }})
         </UButton>
       </div>
@@ -64,6 +72,8 @@ interface Emits {
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
+const { getCategoryIcon } = useMenu()
+
 const getProductCountByCategory = (categoryId: number) => {
   return props.products.filter(p => p.category?.id === categoryId).length
 }
@@ -71,11 +81,13 @@ const getProductCountByCategory = (categoryId: number) => {
 const items = computed<TabsItem[]>(() => [
   {
     label: `Tous (${props.products?.length || 0})`,
-    value: 'all'
+    value: 'all',
+    icon: 'i-lucide-grid-3x3'
   },
   ...props.categories.map(category => ({
     label: `${category.name} (${getProductCountByCategory(category.id)})`,
-    value: category.id.toString()
+    value: category.id.toString(),
+    icon: getCategoryIcon(category.name)
   }))
 ])
 
