@@ -19,7 +19,7 @@
           />
         </div>
       </div>
-      
+
       <!-- Badge de quantité -->
       <div class="absolute -top-2 -right-2 min-w-[1.5rem] h-6 bg-primary text-white text-xs font-bold rounded-full flex items-center justify-center shadow-sm border-2 border-white dark:border-neutral-900">
         {{ item.quantity }}
@@ -34,10 +34,10 @@
             {{ item.product.name }}
           </h4>
           <p
-            v-if="item.product.description"
+            v-if="productDescription"
             class="text-xs text-neutral-500 dark:text-neutral-400 mt-1 line-clamp-2"
           >
-            {{ item.product.description }}
+            {{ productDescription }}
           </p>
         </div>
 
@@ -116,7 +116,7 @@
             @click="updateQuantity(item.quantity + 1)"
           />
         </div>
-        
+
         <!-- Total -->
         <div class="text-right">
           <div class="text-sm font-bold text-primary">
@@ -152,6 +152,35 @@ const { getImageUrl } = useStrapiImage()
 
 // Computed
 const itemTotal = computed(() => props.item.product.price * props.item.quantity)
+
+const productDescription = computed(() => {
+  const description = props.item.product.description
+
+  if (!description) return null
+
+  // Si c'est une chaîne, la retourner directement
+  if (typeof description === 'string') {
+    return description
+  }
+
+  // Si c'est un tableau de RichTextBlock, extraire le texte
+  if (Array.isArray(description)) {
+    return description
+      .map((block) => {
+        if (block.type === 'paragraph' && block.children) {
+          return block.children
+            .filter(child => child.type === 'text')
+            .map(child => child.text)
+            .join('')
+        }
+        return ''
+      })
+      .join(' ')
+      .trim() || null
+  }
+
+  return null
+})
 
 // Methods
 const updateQuantity = (newQuantity: number) => {

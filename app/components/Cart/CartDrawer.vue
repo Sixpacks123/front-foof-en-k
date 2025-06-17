@@ -38,6 +38,20 @@
           @update-quantity="updateQuantity"
           @remove="removeItem"
         />
+        
+        <!-- Actions d'ajout -->
+        <div class="pt-4 border-t border-neutral-200 dark:border-neutral-700">
+          <!-- Bouton pour ajouter d'autres produits -->
+          <UButton
+            block
+            variant="outline"
+            color="primary"
+            icon="i-lucide-plus"
+            @click="navigateToMenu"
+          >
+            Ajouter d'autres produits
+          </UButton>
+        </div>
       </div>
     </template>
 
