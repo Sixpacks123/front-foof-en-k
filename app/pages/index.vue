@@ -312,6 +312,7 @@
 
     <!-- Section emplacements simplifiée -->
     <UPageSection
+      v-if="locations && locations.length"
       title="Où nous trouver"
       description="Découvrez nos emplacements de la semaine. Notre food truck se déplace pour vous apporter le meilleur de nos burgers artisanaux."
     >
@@ -339,7 +340,7 @@
             name="i-lucide-phone"
             class="w-5 h-5 mr-2"
           />
-          Appeler : 06 24 31 67 90
+          06 24 31 67 90
         </UButton>
 
         <UButton
@@ -349,7 +350,7 @@
           class="mb-4"
         >
           <UIcon
-            name="i-lucide-menu"
+            name="i-lucide-hamburger"
             class="w-5 h-5 mr-2"
           />
           Voir nos burgers
@@ -417,7 +418,7 @@
           <template #icon>
             <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-6">
               <UIcon
-                name="i-lucide-utensils"
+                name="i-lucide-cooking-pot"
                 class="w-8 h-8 text-white"
               />
             </div>

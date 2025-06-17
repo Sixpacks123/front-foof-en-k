@@ -276,27 +276,9 @@ const currentYear = new Date().getFullYear()
         </p>
       </template>
 
-      <!-- Center navigation for larger screens -->
-      <UNavigationMenu
-        :items="navigationLinks"
-        variant="link"
-        class="hidden lg:flex"
-      />
-
       <!-- Right section with quick actions -->
       <template #right>
         <div class="flex items-center gap-2">
-          <!-- GitHub Link (if applicable) -->
-          <UButton
-            icon="i-simple-icons-github"
-            color="neutral"
-            variant="ghost"
-            to="https://github.com"
-            target="_blank"
-            aria-label="GitHub"
-            size="sm"
-          />
-
           <!-- Back to top button -->
           <UButton
             icon="i-heroicons-arrow-up"

@@ -114,6 +114,24 @@
               </div>
             </LPopup>
           </LMarker>
+
+          <!-- Marqueur de position utilisateur -->
+          <LMarker
+            v-if="userLocation"
+            :lat-lng="[userLocation.lat, userLocation.lon]"
+          >
+            <LIcon>
+              <div class="flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full shadow-lg border-2 border-white">
+                <div class="w-2 h-2 bg-white rounded-full"></div>
+              </div>
+            </LIcon>
+            
+            <LPopup>
+              <div class="p-2">
+                <p class="text-sm font-medium">Votre position</p>
+              </div>
+            </LPopup>
+          </LMarker>
         </LMap>
       </div>
     </UCard>
@@ -127,12 +145,14 @@ interface Props {
   locations?: Location[]
   defaultCenter?: [number, number]
   defaultZoom?: number
+  userLocation?: { lat: number, lon: number } | null
 }
 
 const props = withDefaults(defineProps<Props>(), {
   locations: () => [],
   defaultCenter: () => [46.603354, 1.888334], // Centre de la France
-  defaultZoom: 6
+  defaultZoom: 6,
+  userLocation: null
 })
 
 // État de la carte
@@ -185,8 +205,20 @@ const zoomToLocation = (location: Location) => {
   })
 }
 
-// Exposer la méthode pour le composant parent
-defineExpose({ zoomToLocation })
+// Centrer sur la position de l'utilisateur
+const centerOnUser = (lat: number, lon: number) => {
+  center.value = [lat, lon]
+  zoom.value = 14
+  
+  nextTick(() => {
+    if (mapRef.value?.leafletObject) {
+      mapRef.value.leafletObject.setView([lat, lon], 14)
+    }
+  })
+}
+
+// Exposer les méthodes pour le composant parent
+defineExpose({ zoomToLocation, centerOnUser })
 
 // Watcher pour ajuster la carte quand les emplacements changent
 watch(() => props.locations, fitBounds, { immediate: true })
