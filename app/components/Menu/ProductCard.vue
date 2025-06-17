@@ -1,23 +1,23 @@
 <template>
   <div
-    class="group relative rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-primary-200 flex flex-row md:flex-col h-full"
+    class="group relative dark:bg-neutral-800 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-neutral-700 hover:border-neutral-700 flex flex-row md:flex-col h-full"
   >
     <!-- Product Content - Mobile first -->
     <div class="p-4 md:p-6 flex-1 flex flex-col order-1 md:order-2">
       <div class="flex-1">
-        <h3 class="text-lg md:text-xl font-bold mb-2 group-hover:text-primary-600 transition-colors line-clamp-2 md:truncate">
+        <h3 class="text-lg md:text-xl font-bold mb-2 group-hover:text-primary-400 transition-colors line-clamp-2 md:truncate">
           {{ product.name }}
         </h3>
         <p
-          v-if="product.description?.[0]?.text && product.description[0].text !== 'Un délicieux plat préparé avec des ingrédients frais et de qualité.'"
-          class="text-sm mb-3 md:mb-4 line-clamp-2"
+          v-if="descriptionText"
+          class="text-sm mb-3 md:mb-4  "
         >
-          {{ product.description[0].text }}
+          {{ descriptionText }}
         </p>
 
         <!-- Price - Mobile visible -->
         <div class="md:hidden mb-3">
-          <span class="text-lg font-bold text-primary-600">{{ product.price?.toFixed(2) }}€</span>
+          <span class="text-lg font-bold text-primary-400">{{ product.price?.toFixed(2) }}€</span>
         </div>
 
         <!-- Ingredients - Now visible on mobile too -->
@@ -153,5 +153,43 @@ const mainIngredients = computed(() => {
  */
 const allergens = computed(() => {
   return props.product.ingredients?.filter(ingredient => ingredient.isAllergen) || []
+})
+
+/**
+ * Extract text from complex description structure
+ */
+const descriptionText = computed(() => {
+  if (!props.product.description) return null
+
+  // If it's already a string, return it directly
+  if (typeof props.product.description === 'string') {
+    return props.product.description === 'Un délicieux plat préparé avec des ingrédients frais et de qualité.'
+      ? null
+      : props.product.description
+  }
+
+  // If it's an array (rich text from Strapi)
+  if (Array.isArray(props.product.description)) {
+    const text = props.product.description
+      .map((block) => {
+        if (block.children && Array.isArray(block.children)) {
+          return block.children
+            .map(child => child.text || '')
+            .join('')
+            .trim()
+        }
+        return ''
+      })
+      .filter(text => text.length > 0)
+      .join(' ')
+      .trim()
+
+    // Don't show generic description
+    return text === 'Un délicieux plat préparé avec des ingrédients frais et de qualité.'
+      ? null
+      : text || null
+  }
+
+  return null
 })
 </script>

@@ -137,11 +137,22 @@ export interface ProductImage extends BaseEntity {
 }
 
 /**
+ * Rich text block structure from Strapi
+ */
+export interface RichTextBlock {
+  type: string
+  children: Array<{
+    text: string
+    type: string
+  }>
+}
+
+/**
  * Product entity from Strapi
  */
 export interface Product extends BaseEntity {
   name: string
-  description: string | null
+  description: string | RichTextBlock[] | null
   price: number
   available: boolean
   isVegetarian?: boolean

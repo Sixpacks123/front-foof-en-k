@@ -1,11 +1,39 @@
 <template>
-    <BaseContainer
-      :loading="pending"
-      :is-empty="!categories?.length"
-      empty-title="Aucune catégorie"
-      empty-description="Aucune catégorie de produits n'est disponible pour le moment."
-      empty-icon="i-lucide-folder-x"
-    >
+  <BaseContainer
+    :loading="pending"
+    :is-empty="!categories?.length"
+    empty-title="Aucune catégorie"
+    empty-description="Aucune catégorie de produits n'est disponible pour le moment."
+    empty-icon="i-lucide-folder-x"
+  >
+    <!-- Mobile: Boutons horizontaux scrollables -->
+    <div class="md:hidden">
+      <div class="flex gap-3 overflow-x-auto pb-4 scrollbar-hide">
+        <UButton
+          :color="selectedCategory === null ? 'primary' : 'neutral'"
+          :variant="selectedCategory === null ? 'solid' : 'outline'"
+          size="sm"
+          class="rounded-full whitespace-nowrap flex-shrink-0"
+          @click="$emit('update:selectedCategory', null)"
+        >
+          Tous ({{ products?.length || 0 }})
+        </UButton>
+        <UButton
+          v-for="category in categories"
+          :key="category.id"
+          :color="selectedCategory === category.id ? 'primary' : 'neutral'"
+          :variant="selectedCategory === category.id ? 'solid' : 'outline'"
+          size="sm"
+          class="rounded-full whitespace-nowrap flex-shrink-0"
+          @click="$emit('update:selectedCategory', category.id)"
+        >
+          {{ category.name }} ({{ getProductCountByCategory(category.id) }})
+        </UButton>
+      </div>
+    </div>
+
+    <!-- Desktop: Onglets -->
+    <div class="hidden md:block">
       <UTabs
         v-model="selectedTab"
         color="primary"
@@ -14,7 +42,8 @@
         :items="items"
         class="w-full"
       />
-    </BaseContainer>
+    </div>
+  </BaseContainer>
 </template>
 
 <script setup lang="ts">
@@ -42,17 +71,30 @@ const getProductCountByCategory = (categoryId: number) => {
 const items = computed<TabsItem[]>(() => [
   {
     label: `Tous (${props.products?.length || 0})`,
-    value: null
+    value: 'all'
   },
   ...props.categories.map(category => ({
     label: `${category.name} (${getProductCountByCategory(category.id)})`,
-    value: category.id,
-    icon: category.icon || 'i-lucide-folder'
+    value: category.id.toString()
   }))
 ])
 
 const selectedTab = computed({
-  get: () => props.selectedCategory,
-  set: value => emit('update:selectedCategory', value)
+  get: () => props.selectedCategory === null ? 'all' : props.selectedCategory.toString(),
+  set: (value: string) => {
+    const categoryId = value === 'all' ? null : parseInt(value)
+    emit('update:selectedCategory', categoryId)
+  }
 })
 </script>
+
+<style scoped>
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+</style>

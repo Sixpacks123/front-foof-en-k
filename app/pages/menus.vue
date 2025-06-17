@@ -71,45 +71,6 @@
       @update:selected-category="selectedCategory = $event"
     />
 </UContainer>
-    <!-- Results Counter -->
-    <UContainer
-      v-if="activeMenu"
-      class="pb-6"
-    >
-      <div class="flex items-center justify-between bg-gradient-to-r from-primary-50 to-primary-100/50 rounded-xl p-4 border border-primary-200">
-        <div class="flex items-center gap-3">
-          <UIcon
-            name="i-lucide-package"
-            class="w-5 h-5 text-primary-600"
-          />
-          <p
-            v-if="!pending"
-            class="text-sm font-medium text-primary-800"
-          >
-            {{ filteredProducts.length }} produit{{ filteredProducts.length > 1 ? 's' : '' }}
-            <span class="text-primary-600">trouvé{{ filteredProducts.length > 1 ? 's' : '' }}</span>
-            {{ selectedCategory !== null ? ' correspondant à vos critères' : ' disponible' }}{{ filteredProducts.length > 1 ? 's' : '' }}
-          </p>
-          <USkeleton
-            v-else
-            class="h-5 w-48"
-          />
-        </div>
-        <div
-          v-if="selectedCategory !== null"
-          class="flex gap-2"
-        >
-          <UButton
-            variant="ghost"
-            size="sm"
-            icon="i-lucide-x"
-            @click="selectedCategory = null"
-          >
-            Effacer les filtres
-          </UButton>
-        </div>
-      </div>
-    </UContainer>
 
     <!-- Loading State -->
     <UContainer
@@ -156,14 +117,14 @@
       class="py-16 text-center"
     >
       <UIcon
-        name="i-lucide-search-x"
-        class="w-16 h-16  mx-auto mb-4"
+        name="i-lucide-package-x"
+        class="w-16 h-16 mx-auto mb-4"
       />
       <h3 class="text-xl font-semibold mb-2">
-        Aucun produit trouvé
+        Aucun produit dans cette catégorie
       </h3>
-      <p class="">
-        Essayez de modifier votre recherche.
+      <p class="text-gray-600">
+        Sélectionnez une autre catégorie pour voir les produits disponibles.
       </p>
     </UContainer>
   </div>

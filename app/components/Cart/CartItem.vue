@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-start space-x-4 p-4 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+  <div class="flex items-start space-x-4 p-4 bg-white dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
     <!-- Image du produit -->
     <div class="relative flex-shrink-0">
       <div class="relative overflow-hidden rounded-lg">
@@ -11,17 +11,17 @@
         >
         <div
           v-else
-          class="w-16 h-16 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
+          class="w-16 h-16 rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center"
         >
           <UIcon
             name="i-lucide-utensils"
-            class="w-6 h-6 text-gray-400"
+            class="w-6 h-6 text-neutral-400"
           />
         </div>
       </div>
       
       <!-- Badge de quantité -->
-      <div class="absolute -top-2 -right-2 min-w-[1.5rem] h-6 bg-primary text-white text-xs font-bold rounded-full flex items-center justify-center shadow-sm border-2 border-white dark:border-gray-900">
+      <div class="absolute -top-2 -right-2 min-w-[1.5rem] h-6 bg-primary text-white text-xs font-bold rounded-full flex items-center justify-center shadow-sm border-2 border-white dark:border-neutral-900">
         {{ item.quantity }}
       </div>
     </div>
@@ -30,12 +30,12 @@
     <div class="flex-1 min-w-0">
       <div class="flex justify-between items-start mb-2">
         <div class="flex-1 pr-2">
-          <h4 class="text-sm font-semibold text-gray-900 dark:text-white line-clamp-1">
+          <h4 class="text-sm font-semibold text-neutral-900 dark:text-white line-clamp-1">
             {{ item.product.name }}
           </h4>
           <p
             v-if="item.product.description"
-            class="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2"
+            class="text-xs text-neutral-500 dark:text-neutral-400 mt-1 line-clamp-2"
           >
             {{ item.product.description }}
           </p>
@@ -54,7 +54,7 @@
       <!-- Prix et badges -->
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center space-x-2">
-          <span class="text-sm font-bold text-gray-900 dark:text-white">
+          <span class="text-sm font-bold text-neutral-900 dark:text-white">
             {{ formatPrice(item.product.price) }}
           </span>
           <div class="flex items-center space-x-1">
@@ -94,7 +94,7 @@
 
       <!-- Contrôles de quantité et total -->
       <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 rounded-full p-1">
+        <div class="flex items-center space-x-1 bg-neutral-100 dark:bg-neutral-800 rounded-full p-1">
           <UButton
             color="neutral"
             variant="ghost"
@@ -122,7 +122,7 @@
           <div class="text-sm font-bold text-primary">
             {{ formatPrice(itemTotal) }}
           </div>
-          <div class="text-xs text-gray-400">
+          <div class="text-xs text-neutral-400">
             {{ item.quantity }} × {{ formatPrice(item.product.price) }}
           </div>
         </div>

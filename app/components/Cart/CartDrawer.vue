@@ -47,7 +47,7 @@
     >
       <div class="space-y-3">
         <!-- Total -->
-        <div class="flex justify-between items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <div class="flex justify-between items-center p-4 bg-neutral-50 dark:bg-neutral-800 rounded-lg">
           <span class="text-lg font-semibold">Total</span>
           <span class="text-xl font-bold text-primary">{{ formatPrice(cartStore.totalPrice) }}</span>
         </div>
