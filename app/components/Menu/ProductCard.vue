@@ -1,6 +1,6 @@
 <template>
   <div
-    class="group relative dark:bg-neutral-800 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-neutral-700 hover:border-neutral-700 flex flex-row md:flex-col h-full"
+    class="group relative dark:bg-neutral-800 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-neutral-200 dark:border-neutral-700 hover:border-neutral-200 dark:hover:border-neutral-700 flex flex-row md:flex-col h-full"
   >
     <!-- Product Content - Mobile first -->
     <div class="p-4 md:p-6 flex-1 flex flex-col order-1 md:order-2">

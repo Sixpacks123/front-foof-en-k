@@ -33,7 +33,6 @@
         format="webp"
         quality="85"
         sizes="(max-width: 768px) 100vw, 800px"
-        style="aspect-ratio: 4/3; object-fit: cover;"
       />
     </UPageHero>
 
