@@ -1,6 +1,6 @@
 <template>
   <UContainer class="pb-12">
-    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-8">
       <MenuProductCard
         v-for="product in products"
         :key="product.id"
