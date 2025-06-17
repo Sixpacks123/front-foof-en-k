@@ -1,27 +1,32 @@
 <template>
   <div>
     <UPageHero
-      title="Food en K - Burgers  & Traiteur"
-      description="Découvrez nos burgers faits maison et notre service traiteur pour tous vos événements. contactez-nous pour une expérience gourmande et conviviale !"
+      title="Les vrais burgers bretons qui régalent la Bretagne !"
+      description="Pain 1863, viande VBF locale, sauces maison... Nos burgers artisanaux sillonnent les routes bretonnes depuis notre food truck. Goûtez la différence !"
       orientation="horizontal"
-
+      :ui="{ container: 'md:pt-18 lg:pt-20' }"
       :links="[
         {
-          label: 'Voir nos burgers',
+          label: 'Je veux goûter !',
           to: '/menus',
-          trailingIcon: 'i-lucide-hamburger',
+          trailingIcon: 'i-lucide-heart',
           size: 'xl',
           color: 'primary'
         },
         {
-          label: 'Nous contacter',
+          label: 'Où vous êtes ?',
           to: '/contact',
-          icon: 'i-lucide-phone',
+          icon: 'i-lucide-map-pin',
           size: 'xl',
           variant: 'ghost'
         }
       ]"
     >
+      <template #title>
+        <span class="text-center">
+          Food en K - Burgers & Traiteur
+        </span>
+      </template>
       <NuxtImg
         src="/img/Truck.png"
         alt="Food en K - Food truck burgers artisanaux"
@@ -37,57 +42,7 @@
     </UPageHero>
 
     <!-- Stats Marquee Enhanced -->
-    <UPageMarquee>
-      <div class="flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 rounded-full">
-        <UIcon
-          name="i-lucide-map-pin"
-          class="size-6 text-primary-600 dark:text-primary-400"
-        />
-        <span class="font-semibold text-primary-700 dark:text-primary-300">Merdrignac & environs</span>
-      </div>
-      <div class="flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-full">
-        <UIcon
-          name="i-lucide-clock"
-          class="size-6 text-green-600 dark:text-green-400"
-        />
-        <span class="font-semibold text-green-700 dark:text-green-300">Ouvert 7j/7</span>
-      </div>
-      <div class="flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 rounded-full">
-        <UIcon
-          name="i-lucide-leaf"
-          class="size-6 text-emerald-600 dark:text-emerald-400"
-        />
-        <span class="font-semibold text-emerald-700 dark:text-emerald-300">100% Produits locaux</span>
-      </div>
-      <div class="flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-full">
-        <UIcon
-          name="i-lucide-truck"
-          class="size-6 text-blue-600 dark:text-blue-400"
-        />
-        <span class="font-semibold text-blue-700 dark:text-blue-300">Food Truck mobile</span>
-      </div>
-      <div class="flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-full">
-        <UIcon
-          name="i-lucide-users"
-          class="size-6 text-purple-600 dark:text-purple-400"
-        />
-        <span class="font-semibold text-purple-700 dark:text-purple-300">Événements sur mesure</span>
-      </div>
-      <div class="flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 rounded-full">
-        <UIcon
-          name="i-lucide-award"
-          class="size-6 text-amber-600 dark:text-amber-400"
-        />
-        <span class="font-semibold text-amber-700 dark:text-amber-300">Artisan primé</span>
-      </div>
-      <div class="flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-rose-50 to-rose-100 dark:from-rose-900/20 dark:to-rose-800/20 rounded-full">
-        <UIcon
-          name="i-lucide-heart"
-          class="size-6 text-rose-600 dark:text-rose-400"
-        />
-        <span class="font-semibold text-rose-700 dark:text-rose-300">Fait avec amour</span>
-      </div>
-    </UPageMarquee>
+    <PageMarquee />
 
     <!-- Features Section Enhanced -->
     <UPageSection
@@ -350,7 +305,7 @@
 
     <!-- Events Component -->
     <FoodTruckEventSection />
-    
+
     <!-- Galerie photos -->
     <UPageSection>
       <Galerie />
@@ -503,7 +458,7 @@ const heroImageUrl = getOptimizedUrl('/img/Truck.png', {
 // Optimized burger image
 const optimizedBurgerImage = computed(() => {
   if (!burgerDuMoment.value?.images?.[0]) return {}
-  
+
   return getCardImageProps(burgerDuMoment.value.images[0], 'medium')
 })
 
