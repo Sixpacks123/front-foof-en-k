@@ -60,17 +60,18 @@
         Aucun menu n'est actuellement disponible.
       </p>
     </UContainer>
-<UContainer>
-    <MenuCategories
-      v-if="activeMenu"
-      :selected-category="selectedCategory"
-      :categories="categories"
-      :products="products"
-      :pending="pending"
-      class="mb-6"
-      @update:selected-category="selectedCategory = $event"
-    />
-</UContainer>
+    
+    <UContainer>
+      <MenuCategories
+        v-if="activeMenu"
+        :selected-category="selectedCategory"
+        :categories="categories"
+        :products="products"
+        :pending="pending"
+        class="mb-6"
+        @update:selected-category="selectedCategory = $event"
+      />
+    </UContainer>
 
     <!-- Loading State -->
     <UContainer
@@ -127,6 +128,9 @@
         Sélectionnez une autre catégorie pour voir les produits disponibles.
       </p>
     </UContainer>
+
+    <!-- Floating Cart Button -->
+    <CartFloatingButton />
   </div>
 </template>
 

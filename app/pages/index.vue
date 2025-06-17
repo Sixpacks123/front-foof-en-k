@@ -23,7 +23,7 @@
       ]"
     >
       <NuxtImg
-        :src="heroImageUrl"
+        src="/img/Truck.png"
         alt="Food en K - Food truck burgers artisanaux"
         class="rounded-lg shadow-2xl ring ring-default"
         width="800"
