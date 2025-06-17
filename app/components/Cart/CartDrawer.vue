@@ -15,15 +15,25 @@
       <!-- État vide -->
       <div
         v-if="cartStore.isEmpty"
-        icon="i-lucide-shopping-cart"
-        title="Panier vide"
-        description="Ajoutez des plats pour commencer votre commande"
+        class="flex flex-col items-center justify-center py-12 text-center"
       >
+        <UIcon
+          name="i-lucide-shopping-cart"
+          class="w-16 h-16 text-neutral-300 dark:text-neutral-600 mb-4"
+        />
+        <h3 class="text-lg font-semibold text-neutral-900 dark:text-white mb-2">
+          Panier vide
+        </h3>
+        <p class="text-sm text-neutral-500 dark:text-neutral-400 mb-6">
+          Ajoutez des plats pour commencer votre commande
+        </p>
         <UButton
           color="primary"
-          label="Voir le menu"
+          icon="i-lucide-utensils"
           @click="navigateToMenu"
-        />
+        >
+          Voir le menu
+        </UButton>
       </div>
 
       <!-- Liste des articles -->
@@ -31,17 +41,48 @@
         v-else
         class="space-y-4"
       >
-        <CartItem
-          v-for="item in cartStore.items"
-          :key="item.id"
-          :item="item"
-          @update-quantity="updateQuantity"
-          @remove="removeItem"
-        />
+        <!-- Articles avec swipe-to-delete intégré -->
+        <div class="space-y-4">
+          <div
+            v-for="item in cartStore.items"
+            :key="item.id"
+            class="relative overflow-hidden rounded-lg"
+            @touchstart="(e) => handleTouchStart(e, item.id)"
+            @touchmove="handleTouchMove"
+            @touchend="handleTouchEnd"
+          >
+            <!-- Background de suppression -->
+            <div
+              v-if="swipeState.itemId === item.id && swipeState.x < -20"
+              class="absolute inset-0 bg-red-500 flex items-center justify-end pr-4 z-0"
+            >
+              <div class="flex items-center space-x-2 text-white">
+                <UIcon
+                  name="i-lucide-trash-2"
+                  class="w-4 h-4"
+                />
+                <span class="text-sm">Supprimer</span>
+              </div>
+            </div>
+            
+            <!-- CartItem avec transformation -->
+            <div
+              class="relative z-10 transition-transform duration-200"
+              :style="{
+                transform: swipeState.itemId === item.id ? `translateX(${Math.max(swipeState.x, -100)}px)` : 'translateX(0px)'
+              }"
+            >
+              <CartItem
+                :item="item"
+                @update-quantity="updateQuantity"
+                @remove="removeItem"
+              />
+            </div>
+          </div>
+        </div>
         
-        <!-- Actions d'ajout -->
+        <!-- Bouton pour ajouter d'autres produits -->
         <div class="pt-4 border-t border-neutral-200 dark:border-neutral-700">
-          <!-- Bouton pour ajouter d'autres produits -->
           <UButton
             block
             variant="outline"
@@ -130,6 +171,14 @@ const { executeOrderAction } = useCartOrder()
 const actionLoading = ref<OrderAction | null>(null)
 const copied = ref(false)
 
+// État du swipe
+const swipeState = ref({
+  itemId: null as string | null,
+  x: 0,
+  startX: 0,
+  isDragging: false
+})
+
 // Computed properties
 const cartDescription = computed(() => {
   if (cartStore.isEmpty) return 'Aucun article'
@@ -149,6 +198,52 @@ const removeItem = (itemId: string) => {
     description: 'L\'article a été retiré de votre panier',
     color: 'warning'
   })
+}
+
+// Gestion du swipe
+const handleTouchStart = (e: TouchEvent, itemId: string) => {
+  swipeState.value = {
+    itemId,
+    x: 0,
+    startX: e.touches[0].clientX,
+    isDragging: true
+  }
+}
+
+const handleTouchMove = (e: TouchEvent) => {
+  if (!swipeState.value.isDragging || !swipeState.value.itemId) return
+  
+  e.preventDefault()
+  const deltaX = e.touches[0].clientX - swipeState.value.startX
+  swipeState.value.x = Math.min(0, deltaX)
+}
+
+const handleTouchEnd = () => {
+  if (!swipeState.value.isDragging || !swipeState.value.itemId) return
+  
+  const shouldDelete = swipeState.value.x < -60
+  
+  if (shouldDelete) {
+    const itemId = swipeState.value.itemId
+    const item = cartStore.items.find(i => i.id === itemId)
+    
+    // Suppression directe sans passer par removeItem pour éviter le doublon
+    cartStore.removeItem(itemId)
+    
+    toast.add({
+      title: '🗑️ Supprimé par swipe',
+      description: `${item?.product.name || 'Article'} retiré du panier`,
+      color: 'error'
+    })
+  }
+  
+  // Reset state
+  swipeState.value = {
+    itemId: null,
+    x: 0,
+    startX: 0,
+    isDragging: false
+  }
 }
 
 // Navigation vers le menu
