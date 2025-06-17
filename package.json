@@ -23,6 +23,7 @@
     "@pinia/nuxt": "0.11.1",
     "@splinetool/runtime": "^1.9.98",
     "@types/leaflet": "^1.9.18",
+    "@vercel/analytics": "^1.5.0",
     "@vueuse/core": "^13.2.0",
     "@vueuse/nuxt": "13.3.0",
     "leaflet": "^1.9.4",

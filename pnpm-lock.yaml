@@ -41,6 +41,9 @@ dependencies:
   '@types/leaflet':
     specifier: ^1.9.18
     version: 1.9.18
+  '@vercel/analytics':
+    specifier: ^1.5.0
+    version: 1.5.0(vue@3.5.16)
   '@vueuse/core':
     specifier: ^13.2.0
     version: 13.3.0(vue@3.5.16)
@@ -3411,6 +3414,35 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@vercel/analytics@1.5.0(vue@3.5.16):
+    resolution: {integrity: sha512-MYsBzfPki4gthY5HnYN7jgInhAZ7Ac1cYDoRWFomwGHWEX7odTEzbtg9kf/QSo7XEsEAqlQugA6gJ2WS2DEa3g==}
+    peerDependencies:
+      '@remix-run/react': ^2
+      '@sveltejs/kit': ^1 || ^2
+      next: '>= 13'
+      react: ^18 || ^19 || ^19.0.0-rc
+      svelte: '>= 4'
+      vue: ^3
+      vue-router: ^4
+    peerDependenciesMeta:
+      '@remix-run/react':
+        optional: true
+      '@sveltejs/kit':
+        optional: true
+      next:
+        optional: true
+      react:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+      vue-router:
+        optional: true
+    dependencies:
+      vue: 3.5.16(typescript@5.8.3)
+    dev: false
 
   /@vercel/nft@0.29.4(rollup@4.43.0):
     resolution: {integrity: sha512-6lLqMNX3TuycBPABycx7A9F1bHQR7kiQln6abjFbPrf5C/05qHM9M5E4PeTE59c7z8g6vHnx1Ioihb2AQl7BTA==}

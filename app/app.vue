@@ -1,4 +1,5 @@
 <script setup>
+import { Analytics } from '@vercel/analytics/nuxt'
 // Configuration SEO globale pour l'application
 const runtimeConfig = useRuntimeConfig()
 
