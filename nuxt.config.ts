@@ -19,6 +19,27 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   // =====================================
+  // BUILD OPTIMIZATIONS FOR CHUNK SIZE
+  // =====================================
+
+  experimental: {
+    payloadExtraction: false
+  },
+
+  optimization: {
+    keyedComposables: [
+      {
+        name: 'useAsyncData',
+        argumentLength: 2
+      },
+      {
+        name: 'useLazyAsyncData',
+        argumentLength: 2
+      }
+    ]
+  },
+
+  // =====================================
   // SEO CONFIGURATION
   // =====================================
 
@@ -54,6 +75,34 @@ export default defineNuxtConfig({
     transpile: ['@headlessui/vue']
   },
 
+  vite: {
+    build: {
+      chunkSizeWarningLimit: 1000,
+      rollupOptions: {
+        output: {
+          manualChunks: (id) => {
+            // Separate large vendor libraries
+            if (id.includes('leaflet')) {
+              return 'leaflet'
+            }
+            if (id.includes('@nuxt/ui') || id.includes('@headlessui')) {
+              return 'ui'
+            }
+            if (id.includes('@vueuse')) {
+              return 'utils'
+            }
+            if (id.includes('@iconify')) {
+              return 'icons'
+            }
+            if (id.includes('node_modules')) {
+              return 'vendor'
+            }
+          }
+        }
+      }
+    }
+  },
+
   future: {
     compatibilityVersion: 4
   },
@@ -66,7 +115,10 @@ export default defineNuxtConfig({
 
   nitro: {
     compressPublicAssets: true,
-    minify: true
+    minify: true,
+    experimental: {
+      wasm: true
+    }
   },
   // =====================================
   // TYPE SAFETY
