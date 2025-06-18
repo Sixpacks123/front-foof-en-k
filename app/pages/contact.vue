@@ -226,19 +226,21 @@ const validateConditionalFields = (data: Record<string, unknown>) => {
 
 // Schéma de validation Valibot simple
 const schema = v.object({
-  requestType: v.pipe(v.object({
-    label: v.string(),
-    value: v.string(),
-    icon: v.optional(v.string())
-  }), v.nonEmpty('Veuillez sélectionner un type de demande')),
+  requestType: v.pipe(
+    v.nullable(v.object({
+      label: v.string(),
+      value: v.string(),
+      icon: v.optional(v.string())
+    }))
+  ),
   name: v.pipe(v.string(), v.minLength(2, 'Le nom doit contenir au moins 2 caractères')),
   email: v.pipe(v.string(), v.email('Email invalide')),
   phone: v.optional(v.pipe(v.string(), v.regex(/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/, 'Numéro de téléphone invalide'))),
   message: v.pipe(v.string(), v.minLength(10, 'Le message doit contenir au moins 10 caractères')),
   // Champs optionnels pour la validation de base
-  eventDate: v.optional(v.string()),
-  eventLocation: v.optional(v.string()),
-  guestCount: v.optional(v.string())
+  eventDate: v.optional(v.string(), 'La date de l\'événement est requise (si applicable)'),
+  eventLocation: v.optional(v.string(), 'Le lieu de l\'événement est requis'),
+  guestCount: v.optional(v.number('Le nombre d\'invités doit être un nombre'))
 })
 
 type Schema = v.InferOutput<typeof schema>

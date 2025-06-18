@@ -23,9 +23,10 @@
           class="h-32 w-full"
         />
       </div>
-      <USpinner
-        v-else
-        size="lg"
+      <USkeleton
+        v-else-if="skeletonType === 'spinner'"
+        class="h-12 w-12"
+        variant="spinner"
       />
     </div>
 

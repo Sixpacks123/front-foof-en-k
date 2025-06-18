@@ -1,29 +1,33 @@
 <template>
   <UPageHero
-    title="Les vrais burgers bretons qui régalent la Bretagne !"
-    description="Pain 1863, viande VBF locale, sauces maison... Nos burgers artisanaux sillonnent les routes bretonnes depuis notre food truck. Goûtez la différence !"
+    description="Food en K est un food truck de burgers artisanaux, traiteur et événementiel. Nous proposons des recettes uniques et savoureuses, préparées avec des ingrédients frais et locaux."
     orientation="horizontal"
     :ui="{ container: 'md:pt-18 lg:pt-20' }"
     :links="[
       {
-        label: 'Je veux goûter !',
+        label: 'Je veux goûter maintenant !',
         to: '/menus',
-        trailingIcon: 'i-lucide-heart',
+        trailingIcon: 'i-lucide-hamburger',
         size: 'xl',
         color: 'primary'
       },
       {
-        label: 'Où vous êtes ?',
+        label: '📍 Où nous trouver ?',
         to: '/contact',
         icon: 'i-lucide-map-pin',
         size: 'xl',
-        variant: 'ghost'
+        variant: 'outline'
       }
     ]"
   >
     <template #title>
-      <span class="text-center">
-        Food en K - Burgers & Traiteur
+      <span class="line-clamp-2 text-3xl md:text-4xl lg:text-4xl font-extrabold pb-2">
+        Food en K -
+        <BaseFlipWords
+          :words="['Burgers', 'Traiteur', 'Artisanaux']"
+          :duration="2000"
+          class="!text-primary text-4xl md:text-5xl lg:text-6xl font-extrabold"
+        />
       </span>
     </template>
     <NuxtImg
@@ -35,11 +39,29 @@
       priority
       loading="eager"
       format="webp"
-      quality="85"
-      sizes="(max-width: 768px) 100vw, 800px"
+      quality="75"
+      sizes="(max-width: 640px) 100vw, (max-width: 768px) 80vw, (max-width: 1024px) 60vw, 800px"
+      placeholder
+      :modifiers="{
+        fit: 'cover',
+        quality: 75,
+        format: 'webp'
+      }"
     />
   </UPageHero>
 </template>
 
 <script setup>
+// Préchargement de l'image critique pour améliorer le LCP
+useHead({
+  link: [
+    {
+      rel: 'preload',
+      as: 'image',
+      href: '/img/Truck.png',
+      type: 'image/png',
+      fetchpriority: 'high'
+    }
+  ]
+})
 </script>

@@ -19,27 +19,6 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   // =====================================
-  // BUILD OPTIMIZATIONS FOR CHUNK SIZE
-  // =====================================
-
-  experimental: {
-    payloadExtraction: false
-  },
-
-  optimization: {
-    keyedComposables: [
-      {
-        name: 'useAsyncData',
-        argumentLength: 2
-      },
-      {
-        name: 'useLazyAsyncData',
-        argumentLength: 2
-      }
-    ]
-  },
-
-  // =====================================
   // SEO CONFIGURATION
   // =====================================
 
@@ -75,6 +54,45 @@ export default defineNuxtConfig({
     transpile: ['@headlessui/vue']
   },
 
+  optimization: {
+    keyedComposables: [
+      {
+        name: 'useAsyncData',
+        argumentLength: 2
+      },
+      {
+        name: 'useLazyAsyncData',
+        argumentLength: 2
+      }
+    ]
+  },
+
+  future: {
+    compatibilityVersion: 4
+  },
+
+  // =====================================
+  // BUILD OPTIMIZATIONS FOR CHUNK SIZE
+  // =====================================
+
+  experimental: {
+    payloadExtraction: false
+  },
+
+  compatibilityDate: '2025-01-15',
+
+  // =====================================
+  // PERFORMANCE OPTIMIZATIONS
+  // =====================================
+
+  nitro: {
+    compressPublicAssets: true,
+    minify: true,
+    experimental: {
+      wasm: true
+    }
+  },
+
   vite: {
     build: {
       chunkSizeWarningLimit: 1000,
@@ -102,24 +120,6 @@ export default defineNuxtConfig({
       }
     }
   },
-
-  future: {
-    compatibilityVersion: 4
-  },
-
-  compatibilityDate: '2025-01-15',
-
-  // =====================================
-  // PERFORMANCE OPTIMIZATIONS
-  // =====================================
-
-  nitro: {
-    compressPublicAssets: true,
-    minify: true,
-    experimental: {
-      wasm: true
-    }
-  },
   // =====================================
   // TYPE SAFETY
   // =====================================
@@ -138,8 +138,8 @@ export default defineNuxtConfig({
     }
   },
   image: {
-    quality: 80,
-    format: ['webp', 'jpg'],
+    quality: 75,
+    format: ['webp', 'avif', 'jpg'],
     screens: {
       xs: 320,
       sm: 640,
@@ -147,6 +147,20 @@ export default defineNuxtConfig({
       lg: 1024,
       xl: 1280,
       xxl: 1536
+    },
+    domains: [],
+    alias: {},
+    densities: [1, 2],
+    presets: {
+      hero: {
+        modifiers: {
+          format: 'webp',
+          quality: 75,
+          width: 800,
+          height: 600,
+          fit: 'cover'
+        }
+      }
     },
     strapi: {
       baseURL: `${process.env.STRAPI_URL || 'http://localhost:1337'}`

@@ -2,19 +2,23 @@
 const route = useRoute()
 
 const items = computed(() => [{
-  label: 'Menu',
+  label: 'Accueil',
+  to: '/',
+  active: route.path === '/'
+}, {
+  label: 'Nos Burgers',
   to: '/menus',
   active: route.path.startsWith('/menu')
 }, {
-  label: 'Emplacements',
+  label: 'Nos Emplacements',
   to: '/emplacements',
   active: route.path.startsWith('/emplacements')
 }, {
-  label: 'Evenements',
+  label: 'Nos Événements',
   to: '/events',
   active: route.path.startsWith('/events')
 }, {
-  label: 'Contact',
+  label: 'Nous Contacter',
   to: '/contact'
 }])
 </script>
