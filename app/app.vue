@@ -31,6 +31,8 @@ useSeoMeta({
 
 <template>
   <UApp>
+      <Analytics />
+
     <AlertBanner />
 
     <AppHeader />
