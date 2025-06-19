@@ -1,8 +1,11 @@
 <template>
   <UPageHero
-    title="Food en K"
+    title="Food en'K"
     description="🍔 Food truck de burgers artisanaux, traiteur et événementiel. Nous proposons des recettes uniques et savoureuses, préparées avec des ingrédients frais et locaux."
     headline="🔥 Nouveau Site web"
+    :ui="{
+      title: 'font-bold text-4xl md:text-6xl lg:text-7xl font-display tracking-wide'
+    }"
     orientation="horizontal"
     :links="[
       {
@@ -112,6 +115,28 @@ useHead({
 </script>
 
 <style scoped>
+/* Styles pour le titre avec font personnalisée */
+.font-custom-title {
+  /* Effets visuels */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.02em;
+}
+
+/* Effet de gradient sur le titre (optionnel) */
+.font-custom-title {
+  background: linear-gradient(135deg, #ff6b6b, #ffa500, #ff6b6b);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 3s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
 /* Animation slide-down avec bounce pour le badge du haut */
 @keyframes slide-down-bounce {
   0% {

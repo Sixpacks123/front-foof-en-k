@@ -3,6 +3,9 @@
 
 @theme static {
   --font-sans: 'Public Sans', sans-serif;
+  
+  /* Font pour les titres - choisissez une de ces options */
+  --font-display: 'Rubik', sans-serif;
 
   --color-green-50: #EFFDF5;
   --color-green-100: #D9FBE8;
@@ -16,3 +19,5 @@
   --color-green-900: #0A5331;
   --color-green-950: #052E16;
 }
+
+
