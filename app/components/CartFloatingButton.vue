@@ -15,8 +15,7 @@
         <!-- Mobile: Full width bottom bar -->
         <div class="md:hidden">
           <UButton
-            :label="`Voir le panier (${itemCount})`"
-            :trailing="`${totalPrice.toFixed(2)}€`"
+            :label="`Voir le panier (${itemCount}) - ${totalPrice.toFixed(2)}€`"
             size="xl"
             color="primary"
             variant="solid"

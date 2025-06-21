@@ -36,7 +36,7 @@
           <UBadge
             v-for="allergen in allergens.slice(0, 2)"
             :key="`allergen-${allergen.id}`"
-            color="orange"
+            color="warning"
             variant="soft"
             size="sm"
           >
@@ -50,7 +50,7 @@
           <!-- Show remaining count if there are more ingredients -->
           <UBadge
             v-if="(product.ingredients?.length || 0) > 6"
-            color="gray"
+            color="neutral"
             variant="soft"
             size="sm"
           >

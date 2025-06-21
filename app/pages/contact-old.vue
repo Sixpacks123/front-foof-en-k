@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- Hero Section -->
+    <!-- Hero Section amélioré -->
     <UPageHero
       title="Contactez Food en K"
       description="Besoin d'organiser un événement ? Une question sur nos services ? Écrivez-nous ou appelez-nous directement !"
@@ -137,59 +137,31 @@
             </h3>
             <div class="space-y-3">
               <div class="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
-                <UIcon
-                  name="i-heroicons-information-circle"
-                  class="w-5 h-5 text-blue-600"
-                />
+                <UIcon name="i-heroicons-information-circle" class="w-5 h-5 text-blue-600" />
                 <div>
-                  <div class="font-medium text-blue-900">
-                    Information
-                  </div>
-                  <div class="text-sm text-blue-700">
-                    Questions générales
-                  </div>
+                  <div class="font-medium text-blue-900">Information</div>
+                  <div class="text-sm text-blue-700">Questions générales</div>
                 </div>
               </div>
               <div class="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
-                <UIcon
-                  name="i-heroicons-calendar-days"
-                  class="w-5 h-5 text-purple-600"
-                />
+                <UIcon name="i-heroicons-calendar-days" class="w-5 h-5 text-purple-600" />
                 <div>
-                  <div class="font-medium text-purple-900">
-                    Événement
-                  </div>
-                  <div class="text-sm text-purple-700">
-                    Organiser un événement
-                  </div>
+                  <div class="font-medium text-purple-900">Événement</div>
+                  <div class="text-sm text-purple-700">Organiser un événement</div>
                 </div>
               </div>
               <div class="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
-                <UIcon
-                  name="i-heroicons-shopping-bag"
-                  class="w-5 h-5 text-green-600"
-                />
+                <UIcon name="i-heroicons-shopping-bag" class="w-5 h-5 text-green-600" />
                 <div>
-                  <div class="font-medium text-green-900">
-                    Commande
-                  </div>
-                  <div class="text-sm text-green-700">
-                    Commander des burgers
-                  </div>
+                  <div class="font-medium text-green-900">Commande</div>
+                  <div class="text-sm text-green-700">Commander des burgers</div>
                 </div>
               </div>
               <div class="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
-                <UIcon
-                  name="i-heroicons-handshake"
-                  class="w-5 h-5 text-orange-600"
-                />
+                <UIcon name="i-heroicons-handshake" class="w-5 h-5 text-orange-600" />
                 <div>
-                  <div class="font-medium text-orange-900">
-                    Partenariat
-                  </div>
-                  <div class="text-sm text-orange-700">
-                    Collaboration business
-                  </div>
+                  <div class="font-medium text-orange-900">Partenariat</div>
+                  <div class="text-sm text-orange-700">Collaboration business</div>
                 </div>
               </div>
             </div>
@@ -208,9 +180,9 @@
               </p>
             </div>
 
-            <!-- Formulaire avec validation conditionnelle -->
+            <!-- Formulaire principal avec Valibot -->
             <UForm
-              :schema="schema"
+              :schema="baseSchema"
               :state="state"
               class="space-y-6"
               @submit="onSubmit"
@@ -267,120 +239,128 @@
                 />
               </UFormField>
 
-              <!-- Champs spécifiques aux événements -->
-              <template v-if="state.requestType === 'event'">
-                <div class="border-t pt-6">
-                  <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <UIcon
-                      name="i-heroicons-calendar-days"
-                      class="w-5 h-5 text-purple-600"
-                    />
-                    Détails de l'événement
-                  </h4>
-                  
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <UFormField
-                      label="Date de l'événement"
-                      name="eventDate"
-                      :required="state.requestType === 'event'"
-                    >
-                      <UInput
-                        v-model="state.eventDate"
-                        type="date"
-                        icon="i-heroicons-calendar"
-                      />
-                    </UFormField>
-
-                    <UFormField
-                      label="Nombre d'invités"
-                      name="guestCount"
-                      :required="state.requestType === 'event'"
-                    >
-                      <UInput
-                        v-model="state.guestCount"
-                        type="number"
-                        placeholder="Ex: 50"
-                        icon="i-heroicons-users"
-                      />
-                    </UFormField>
-                  </div>
-
+              <!-- Formulaire imbriqué pour événements -->
+              <UForm
+                v-if="state.requestType === 'event'"
+                :schema="eventSchema"
+                :state="eventState"
+                attach
+                class="border-t pt-6"
+              >
+                <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <UIcon
+                    name="i-heroicons-calendar-days"
+                    class="w-5 h-5 text-purple-600"
+                  />
+                  Détails de l'événement
+                </h4>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <UFormField
-                    label="Lieu de l'événement"
-                    name="eventLocation"
-                    :required="state.requestType === 'event'"
+                    label="Date de l'événement"
+                    name="eventDate"
+                    required
                   >
                     <UInput
-                      v-model="state.eventLocation"
-                      placeholder="Adresse complète ou ville"
-                      icon="i-heroicons-map-pin"
+                      v-model="eventState.eventDate"
+                      type="date"
+                      icon="i-heroicons-calendar"
                     />
                   </UFormField>
 
                   <UFormField
-                    label="Budget approximatif"
-                    name="budget"
+                    label="Nombre d'invités"
+                    name="guestCount"
+                    required
+                  >
+                    <UInput
+                      v-model="eventState.guestCount"
+                      type="number"
+                      placeholder="Ex: 50"
+                      icon="i-heroicons-users"
+                    />
+                  </UFormField>
+                </div>
+
+                <UFormField
+                  label="Lieu de l'événement"
+                  name="eventLocation"
+                  required
+                >
+                  <UInput
+                    v-model="eventState.eventLocation"
+                    placeholder="Adresse complète ou ville"
+                    icon="i-heroicons-map-pin"
+                  />
+                </UFormField>
+
+                <UFormField
+                  label="Budget approximatif"
+                  name="budget"
+                >
+                  <USelectMenu
+                    v-model="eventState.budget"
+                    :options="budgetOptions"
+                    placeholder="Sélectionnez votre budget"
+                  />
+                </UFormField>
+              </UForm>
+
+              <!-- Formulaire imbriqué pour commandes -->
+              <UForm
+                v-if="state.requestType === 'order'"
+                :schema="orderSchema"
+                :state="orderState"
+                attach
+                class="border-t pt-6"
+              >
+                <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <UIcon
+                    name="i-heroicons-shopping-bag"
+                    class="w-5 h-5 text-green-600"
+                  />
+                  Détails de la commande
+                </h4>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <UFormField
+                    label="Type de commande"
+                    name="orderType"
+                    required
                   >
                     <USelectMenu
-                      v-model="state.budget"
-                      :options="budgetOptions"
-                      placeholder="Sélectionnez votre budget"
+                      v-model="orderState.orderType"
+                      :options="orderTypeOptions"
+                      placeholder="Choisissez le type"
                     />
                   </UFormField>
-                </div>
-              </template>
-
-              <!-- Champs spécifiques aux commandes -->
-              <template v-if="state.requestType === 'order'">
-                <div class="border-t pt-6">
-                  <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <UIcon
-                      name="i-heroicons-shopping-bag"
-                      class="w-5 h-5 text-green-600"
-                    />
-                    Détails de la commande
-                  </h4>
-                  
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <UFormField
-                      label="Type de commande"
-                      name="orderType"
-                      :required="state.requestType === 'order'"
-                    >
-                      <USelectMenu
-                        v-model="state.orderType"
-                        :options="orderTypeOptions"
-                        placeholder="Choisissez le type"
-                      />
-                    </UFormField>
-
-                    <UFormField
-                      label="Quantité"
-                      name="quantity"
-                      :required="state.requestType === 'order'"
-                    >
-                      <UInput
-                        v-model="state.quantity"
-                        type="number"
-                        placeholder="Ex: 10"
-                        icon="i-heroicons-hashtag"
-                      />
-                    </UFormField>
-                  </div>
 
                   <UFormField
-                    label="Date de livraison"
-                    name="deliveryDate"
-                    :required="state.requestType === 'order'"
+                    label="Quantité"
+                    name="quantity"
+                    required
                   >
                     <UInput
-                      v-model="state.deliveryDate"
-                      type="date"
-                      icon="i-heroicons-truck"
+                      v-model="orderState.quantity"
+                      type="number"
+                      placeholder="Ex: 10"
+                      icon="i-heroicons-hashtag"
                     />
                   </UFormField>
                 </div>
-              </template>
+
+                <UFormField
+                  label="Date de livraison"
+                  name="deliveryDate"
+                  required
+                >
+                  <UInput
+                    v-model="orderState.deliveryDate"
+                    type="date"
+                    icon="i-heroicons-truck"
+                  />
+                </UFormField>
+              </UForm>
 
               <!-- Message -->
               <UFormField
@@ -417,57 +397,50 @@
 import * as v from 'valibot'
 import type { FormSubmitEvent } from '@nuxt/ui'
 
-// Validation conditionnelle personnalisée
-const validateConditionalFields = (data: any) => {
-  const errors: any = {}
-  
-  if (data.requestType === 'event') {
-    if (!data.eventDate) errors.eventDate = 'Date de l\'événement requise'
-    if (!data.eventLocation) errors.eventLocation = 'Lieu de l\'événement requis'
-    if (!data.guestCount) errors.guestCount = 'Nombre d\'invités requis'
-    else if (!/^\d+$/.test(data.guestCount)) errors.guestCount = 'Nombre d\'invités invalide'
-  }
-  
-  if (data.requestType === 'order') {
-    if (!data.orderType) errors.orderType = 'Type de commande requis'
-    if (!data.quantity) errors.quantity = 'Quantité requise'
-    else if (!/^\d+$/.test(data.quantity)) errors.quantity = 'Quantité invalide'
-    if (!data.deliveryDate) errors.deliveryDate = 'Date de livraison requise'
-  }
-  
-  return Object.keys(errors).length > 0 ? errors : null
-}
-
-// Schéma de validation Valibot simple
-const schema = v.object({
+// Schémas de validation Valibot séparés
+const baseSchema = v.object({
   requestType: v.pipe(v.string(), v.minLength(1, 'Veuillez sélectionner un type de demande')),
   name: v.pipe(v.string(), v.minLength(2, 'Le nom doit contenir au moins 2 caractères')),
   email: v.pipe(v.string(), v.email('Email invalide')),
   phone: v.optional(v.pipe(v.string(), v.regex(/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/, 'Numéro de téléphone invalide'))),
-  message: v.pipe(v.string(), v.minLength(10, 'Le message doit contenir au moins 10 caractères')),
-  // Champs optionnels pour la validation de base
-  eventDate: v.optional(v.string()),
-  eventLocation: v.optional(v.string()),
-  guestCount: v.optional(v.string()),
-  budget: v.optional(v.string()),
-  orderType: v.optional(v.string()),
-  quantity: v.optional(v.string()),
-  deliveryDate: v.optional(v.string())
+  message: v.pipe(v.string(), v.minLength(10, 'Le message doit contenir au moins 10 caractères'))
 })
 
-type Schema = v.InferOutput<typeof schema>
+const eventSchema = v.object({
+  eventDate: v.pipe(v.string(), v.minLength(1, 'Date de l\'événement requise')),
+  eventLocation: v.pipe(v.string(), v.minLength(3, 'Lieu de l\'événement requis')),
+  guestCount: v.pipe(v.string(), v.regex(/^\d+$/, 'Nombre d\'invités invalide')),
+  budget: v.optional(v.string())
+})
 
-// État du formulaire
+const orderSchema = v.object({
+  orderType: v.pipe(v.string(), v.minLength(1, 'Type de commande requis')),
+  quantity: v.pipe(v.string(), v.regex(/^\d+$/, 'Quantité invalide')),
+  deliveryDate: v.pipe(v.string(), v.minLength(1, 'Date de livraison requise'))
+})
+
+type BaseSchema = v.InferOutput<typeof baseSchema>
+type EventSchema = v.InferOutput<typeof eventSchema>
+type OrderSchema = v.InferOutput<typeof orderSchema>
+
+// État du formulaire avec champs conditionnels
 const state = reactive({
   requestType: '',
   name: '',
   email: '',
   phone: '',
-  message: '',
+  message: ''
+})
+
+// États séparés pour les champs conditionnels
+const eventState = reactive({
   eventDate: '',
   eventLocation: '',
   guestCount: '',
-  budget: '',
+  budget: ''
+})
+
+const orderState = reactive({
   orderType: '',
   quantity: '',
   deliveryDate: ''
@@ -528,11 +501,13 @@ const getSubmitButtonText = () => {
 
 // Fonction pour reset les champs conditionnels
 const resetConditionalFields = () => {
-  Object.assign(state, {
+  Object.assign(eventState, {
     eventDate: '',
     eventLocation: '',
     guestCount: '',
-    budget: '',
+    budget: ''
+  })
+  Object.assign(orderState, {
     orderType: '',
     quantity: '',
     deliveryDate: ''
@@ -544,18 +519,18 @@ watch(() => state.requestType, () => {
   resetConditionalFields()
 })
 
-// Soumission du formulaire avec validation conditionnelle
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+// Soumission du formulaire
+async function onSubmit(event: FormSubmitEvent<BaseSchema>) {
   try {
-    // Validation conditionnelle manuelle
-    const conditionalErrors = validateConditionalFields(event.data)
-    if (conditionalErrors) {
-      // Afficher les erreurs (Nuxt UI gère automatiquement l'affichage)
-      throw new Error('Veuillez remplir tous les champs obligatoires')
-    }
-
     // Simulation d'envoi API
     await new Promise(resolve => setTimeout(resolve, 2000))
+
+    // Combiner toutes les données
+    const formData = {
+      ...event.data,
+      ...(state.requestType === 'event' ? eventState : {}),
+      ...(state.requestType === 'order' ? orderState : {})
+    }
 
     // Succès
     toast.add({
@@ -570,17 +545,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       name: '',
       email: '',
       phone: '',
-      message: '',
-      eventDate: '',
-      eventLocation: '',
-      guestCount: '',
-      budget: '',
-      orderType: '',
-      quantity: '',
-      deliveryDate: ''
+      message: ''
     })
+    resetConditionalFields()
 
-    console.log('Form data:', event.data)
+    console.log('Form data:', formData)
   } catch {
     toast.add({
       title: 'Erreur lors de l\'envoi',

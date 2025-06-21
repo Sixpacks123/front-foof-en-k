@@ -1,3 +1,5 @@
+import type { GalleryImage } from '~/types'
+
 export const useGallery = () => {
   // Pour l'instant, j'utilise des images de burgers depuis Unsplash
   // Dans une vraie application, ceci devrait venir de Strapi

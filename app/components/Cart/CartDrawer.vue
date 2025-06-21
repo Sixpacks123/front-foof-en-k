@@ -202,6 +202,7 @@ const removeItem = (itemId: string) => {
 
 // Gestion du swipe
 const handleTouchStart = (e: TouchEvent, itemId: string) => {
+  if (!e.touches?.[0]) return
   swipeState.value = {
     itemId,
     x: 0,
@@ -211,7 +212,7 @@ const handleTouchStart = (e: TouchEvent, itemId: string) => {
 }
 
 const handleTouchMove = (e: TouchEvent) => {
-  if (!swipeState.value.isDragging || !swipeState.value.itemId) return
+  if (!swipeState.value.isDragging || !swipeState.value.itemId || !e.touches?.[0]) return
 
   e.preventDefault()
   const deltaX = e.touches[0].clientX - swipeState.value.startX

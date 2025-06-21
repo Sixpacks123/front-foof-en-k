@@ -6,8 +6,6 @@ Allow: /emplacements
 Allow: /events
 
 Disallow: /admin
-Disallow: /api
 Disallow: /private
-Disallow: /_nuxt
 
 Sitemap: https://food-en-k.com/sitemap.xml

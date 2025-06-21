@@ -93,40 +93,13 @@ export default defineNuxtConfig({
     }
   },
 
-  vite: {
-    build: {
-      chunkSizeWarningLimit: 1000,
-      rollupOptions: {
-        output: {
-          manualChunks: (id) => {
-            // Separate large vendor libraries
-            if (id.includes('leaflet')) {
-              return 'leaflet'
-            }
-            if (id.includes('@nuxt/ui') || id.includes('@headlessui')) {
-              return 'ui'
-            }
-            if (id.includes('@vueuse')) {
-              return 'utils'
-            }
-            if (id.includes('@iconify')) {
-              return 'icons'
-            }
-            if (id.includes('node_modules')) {
-              return 'vendor'
-            }
-          }
-        }
-      }
-    }
-  },
   // =====================================
   // TYPE SAFETY
   // =====================================
 
   typescript: {
     strict: true,
-    typeCheck: false
+    typeCheck: true
   },
 
   eslint: {
@@ -178,8 +151,7 @@ export default defineNuxtConfig({
 
   robots: {
     allow: ['/', '/menus', '/contact', '/emplacements', '/events'],
-    disallow: ['/admin', '/api'],
-    sitemap: '/sitemap.xml'
+    disallow: ['/admin', '/private']
   },
 
   schemaOrg: {
@@ -196,8 +168,14 @@ export default defineNuxtConfig({
   },
 
   sitemap: {
-    sources: [
-      '/sitemap.xml'
+    urls: [
+      '/',
+      '/menus',
+      '/contact',
+      '/emplacements',
+      '/events',
+      '/mentions-legales',
+      '/politique-confidentialite'
     ]
   }
 })

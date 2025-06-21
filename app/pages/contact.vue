@@ -207,7 +207,7 @@ import type { FormSubmitEvent } from '@nuxt/ui'
 type RequestTypeOption = {
   label: string
   value: string
-  icon?: string
+  icon: string
 }
 
 // Validation conditionnelle personnalisée
@@ -226,35 +226,33 @@ const validateConditionalFields = (data: Record<string, unknown>) => {
 
 // Schéma de validation Valibot simple
 const schema = v.object({
-  requestType: v.pipe(
-    v.nullable(v.object({
-      label: v.string(),
-      value: v.string(),
-      icon: v.optional(v.string())
-    }))
-  ),
+  requestType: v.optional(v.object({
+    label: v.string(),
+    value: v.string(),
+    icon: v.string()
+  })),
   name: v.pipe(v.string(), v.minLength(2, 'Le nom doit contenir au moins 2 caractères')),
   email: v.pipe(v.string(), v.email('Email invalide')),
   phone: v.optional(v.pipe(v.string(), v.regex(/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/, 'Numéro de téléphone invalide'))),
   message: v.pipe(v.string(), v.minLength(10, 'Le message doit contenir au moins 10 caractères')),
   // Champs optionnels pour la validation de base
-  eventDate: v.optional(v.string(), 'La date de l\'événement est requise (si applicable)'),
-  eventLocation: v.optional(v.string(), 'Le lieu de l\'événement est requis'),
-  guestCount: v.optional(v.number('Le nombre d\'invités doit être un nombre'))
+  eventDate: v.optional(v.string()),
+  eventLocation: v.optional(v.string()),
+  guestCount: v.optional(v.number())
 })
 
 type Schema = v.InferOutput<typeof schema>
 
 // État du formulaire
 const state = reactive({
-  requestType: null as RequestTypeOption | null,
+  requestType: undefined as RequestTypeOption | undefined,
   name: '',
   email: '',
   phone: '',
   message: '',
   eventDate: '',
   eventLocation: '',
-  guestCount: ''
+  guestCount: 0
 })
 
 // Options pour les selects
@@ -296,7 +294,7 @@ const resetConditionalFields = () => {
   Object.assign(state, {
     eventDate: '',
     eventLocation: '',
-    guestCount: ''
+    guestCount: 0
   })
 }
 
@@ -322,20 +320,19 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     toast.add({
       title: 'Message envoyé avec succès !',
       description: 'Nous vous répondrons dans les plus brefs délais.',
-      color: 'success',
-      timeout: 5000
+      color: 'success'
     })
 
     // Reset du formulaire
     Object.assign(state, {
-      requestType: null,
+      requestType: undefined,
       name: '',
       email: '',
       phone: '',
       message: '',
       eventDate: '',
       eventLocation: '',
-      guestCount: ''
+      guestCount: 0
     })
 
     console.log('Form data:', event.data)

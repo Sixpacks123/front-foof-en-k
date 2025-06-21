@@ -46,7 +46,7 @@
           color="neutral"
           variant="ghost"
           icon="i-lucide-x"
-          size="2xs"
+          size="xs"
           class="min-w-[28px] min-h-[28px] sm:min-w-[32px] sm:min-h-[32px]"
           @click="$emit('remove', item.id)"
         />
@@ -100,7 +100,7 @@
             color="neutral"
             variant="ghost"
             icon="i-lucide-minus"
-            size="2xs"
+            size="xs"
             :disabled="item.quantity <= 1"
             class="rounded-full min-w-[32px] min-h-[32px] active:scale-95 transition-transform"
             @click="updateQuantity(item.quantity - 1)"
@@ -112,7 +112,7 @@
             color="neutral"
             variant="ghost"
             icon="i-lucide-plus"
-            size="2xs"
+            size="xs"
             class="rounded-full min-w-[32px] min-h-[32px] active:scale-95 transition-transform"
             @click="updateQuantity(item.quantity + 1)"
           />

@@ -282,12 +282,17 @@ export interface ProductBadge {
 /**
  * Single alert item from Strapi
  */
-export interface Alert extends BaseEntity {
+export interface Alert {
+  id: number | string // Allow both string and number IDs
   title: string
-  description: string
-  icon: string
-  color: 'error' | 'warning' | 'info' | 'success'
+  description?: string
+  message?: string
+  icon?: string
+  type?: 'error' | 'warning' | 'info' | 'success'
+  color?: 'error' | 'warning' | 'info' | 'success'
   isActive: boolean
+  priority?: number // Optional priority for sorting
+  dismissible?: boolean
 }
 
 /**
@@ -438,6 +443,7 @@ export interface Location extends BaseEntity {
   opening_hours?: string
   start_time?: string
   end_time?: string
+  distance?: number // Optional computed distance
 }
 
 /**
@@ -446,4 +452,50 @@ export interface Location extends BaseEntity {
 export interface LocationWithDistance extends Location {
   distance?: number
   displayTime?: string
+}
+
+/**
+ * Request type option for contact forms
+ */
+export interface RequestTypeOption {
+  label: string
+  value: string
+  icon: string
+}
+
+/**
+ * Tabs item interface for menu filters
+ */
+export interface TabsItem {
+  label: string
+  value: string | number | null
+}
+
+/**
+ * Toast with timeout option
+ */
+export interface ToastWithTimeout {
+  title?: string
+  description?: string
+  color?: 'primary' | 'neutral' | 'error' | 'info' | 'warning' | 'success' | 'secondary'
+  timeout?: number
+}
+
+/**
+ * Menu category for structured data
+ */
+export interface MenuCategory {
+  name: string
+  description: string
+  items: MenuItem[]
+}
+
+/**
+ * Menu item for structured data
+ */
+export interface MenuItem {
+  name: string
+  description?: string
+  image?: string
+  price: number
 }

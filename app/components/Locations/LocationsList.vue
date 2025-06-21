@@ -11,7 +11,26 @@
             color="primary"
             variant="soft"
           >
-            {{ locations.length }} emplacement{{ locations.length > 1 ? 's' : '' }}
+   // Vérifier si un emplacement est ouvert maintenant
+const isLocationOpen = (location: Location): boolean => {
+  if (!location.start_time || !location.end_time) return false
+  
+  const now = new Date()
+  const currentTime = now.getHours() * 60 + now.getMinutes()
+  
+  const startTimeParts = location.start_time.split(':').map(Number)
+  const endTimeParts = location.end_time.split(':').map(Number)
+  
+  const startHour = startTimeParts[0] || 0
+  const startMin = startTimeParts[1] || 0
+  const endHour = endTimeParts[0] || 0
+  const endMin = endTimeParts[1] || 0
+  
+  const startTime = startHour * 60 + startMin
+  const endTime = endHour * 60 + endMin
+  
+  return currentTime >= startTime && currentTime <= endTime
+}ations.length }} emplacement{{ locations.length > 1 ? 's' : '' }}
           </UBadge>
         </div>
       </template>
@@ -47,8 +66,7 @@
           <UCard
             v-for="location in locations"
             :key="location.id"
-            :ui="{ body: { padding: 'p-3 sm:p-4' } }"
-            class="hover:shadow-lg transition-all duration-200 cursor-pointer border border-gray-200 hover:border-primary-200"
+            class="hover:shadow-lg transition-all duration-200 cursor-pointer border border-gray-200 hover:border-primary-200 p-3 sm:p-4"
             @click="selectLocation(location)"
           >
             <!-- Mobile: Layout vertical -->
@@ -362,8 +380,13 @@ const isLocationOpen = (location: Location): boolean => {
   const now = new Date()
   const currentTime = now.getHours() * 60 + now.getMinutes()
   
-  const [startHour, startMin] = location.start_time.split(':').map(Number)
-  const [endHour, endMin] = location.end_time.split(':').map(Number)
+  const startTimeParts = location.start_time.split(':').map(Number)
+  const endTimeParts = location.end_time.split(':').map(Number)
+  
+  const startHour = startTimeParts[0] ?? 0
+  const startMin = startTimeParts[1] ?? 0
+  const endHour = endTimeParts[0] ?? 0
+  const endMin = endTimeParts[1] ?? 0
   
   const startTime = startHour * 60 + startMin
   const endTime = endHour * 60 + endMin

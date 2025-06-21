@@ -25,8 +25,14 @@ const isLocationOpen = (location: Location): boolean => {
 
   const now = new Date()
   const currentTime = now.getHours() * 60 + now.getMinutes()
-  const [startHour, startMin] = location.start_time.split(':').map(Number)
-  const [endHour, endMin] = location.end_time.split(':').map(Number)
+  
+  const startTimeParts = location.start_time.split(':').map(Number)
+  const endTimeParts = location.end_time.split(':').map(Number)
+  
+  const startHour = startTimeParts[0] ?? 0
+  const startMin = startTimeParts[1] ?? 0
+  const endHour = endTimeParts[0] ?? 0
+  const endMin = endTimeParts[1] ?? 0
 
   return currentTime >= startHour * 60 + startMin && currentTime <= endHour * 60 + endMin
 }
@@ -55,7 +61,7 @@ const _stats = computed(() => ({
   closestDistance: (() => {
     if (!userLocation.value || !locationsWithDistance.value.length) return '-'
     const closest = locationsWithDistance.value[0]
-    if (!closest.distance) return '-'
+    if (!closest?.distance) return '-'
     return closest.distance < 1
       ? `${Math.round(closest.distance * 1000)}m`
       : `${closest.distance.toFixed(1)}km`
@@ -157,7 +163,7 @@ useHead({
           label: 'Réessayer',
           color: 'error',
           variant: 'outline',
-          click: () => requestGeolocation()
+          onClick: () => requestGeolocation()
         }]"
       />
 

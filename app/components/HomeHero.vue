@@ -60,37 +60,7 @@
 </template>
 
 <script setup>
-// SEO et performance optimisés
-useHead({
-  title: 'Food en K - Food Truck Burgers Artisanaux | Traiteur Local',
-  meta: [
-    {
-      name: 'description',
-      content: 'Food en K, votre food truck de burgers artisanaux. Traiteur et événementiel avec des ingrédients frais et locaux. Découvrez nos saveurs uniques !'
-    },
-    {
-      property: 'og:title',
-      content: 'Food en K - Burgers Artisanaux sur Roues'
-    },
-    {
-      property: 'og:description',
-      content: 'Food truck de burgers artisanaux, traiteur et événementiel. Ingrédients frais et locaux, saveurs uniques !'
-    },
-    {
-      property: 'og:image',
-      content: '/img/Truck.png'
-    }
-  ],
-  link: [
-    {
-      rel: 'preload',
-      as: 'image',
-      href: '/img/Truck.png',
-      type: 'image/png',
-      fetchpriority: 'high'
-    }
-  ]
-})
+
 </script>
 
 <style scoped>

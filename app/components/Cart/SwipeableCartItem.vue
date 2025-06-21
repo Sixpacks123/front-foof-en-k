@@ -88,11 +88,13 @@ const startTime = ref(0)
 
 // Touch handlers
 const handleTouchStart = (e: TouchEvent) => {
-  startDrag(e.touches[0].clientX)
+  if (e.touches?.[0]) {
+    startDrag(e.touches[0].clientX)
+  }
 }
 
 const handleTouchMove = (e: TouchEvent) => {
-  if (!isDragging.value) return
+  if (!isDragging.value || !e.touches?.[0]) return
   e.preventDefault()
   updateDrag(e.touches[0].clientX)
 }

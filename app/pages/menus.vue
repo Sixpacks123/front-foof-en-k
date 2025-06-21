@@ -241,7 +241,7 @@ watch(activeMenu, (menu) => {
         .filter(product => product.category?.id === category.id)
         .map(product => ({
           name: product.name,
-          description: product.description || '',
+          description: typeof product.description === 'string' ? product.description : undefined,
           image: product.images && product.images.length > 0 ? `/img/${product.images[0]}` : undefined,
           price: product.price
         }))

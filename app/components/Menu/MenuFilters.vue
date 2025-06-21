@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { TabsItem } from '@nuxt/ui'
-
 interface Props {
   categories: Array<{ id: number, name: string }>
   selectedCategory?: number | null
@@ -9,20 +7,20 @@ interface Props {
 const props = defineProps<Props>()
 const emit = defineEmits(['update:selectedCategory'])
 
-const items = computed<TabsItem[]>(() => [
+const items = computed(() => [
   {
     label: 'Tous',
-    value: null
+    value: undefined as string | number | undefined
   },
   ...props.categories.map(category => ({
     label: category.name,
-    value: category.id
+    value: category.id as string | number | undefined
   }))
 ])
 
 const selectedTab = computed({
-  get: () => props.selectedCategory,
-  set: value => emit('update:selectedCategory', value)
+  get: () => props.selectedCategory === null ? undefined : props.selectedCategory,
+  set: value => emit('update:selectedCategory', value === undefined ? null : value)
 })
 </script>
 
