@@ -18,7 +18,7 @@
       
       <!-- Sous-titre -->
       <p class="text-3xl font-light mb-4 opacity-90">
-        Food Truck Burger Artisanal
+        Food Truck Burger
       </p>
       
       <!-- Description -->

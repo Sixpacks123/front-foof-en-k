@@ -40,7 +40,7 @@ export function useSeo() {
     } = data
 
     const siteUrl = runtimeConfig.public.siteUrl
-    const fullTitle = title ? `${title} | Food en K` : 'Food en K - Food Truck Burger Artisanal'
+    const fullTitle = title ? `${title} | Food en K` : 'Food en K - Food Truck Burger'
     const fullDescription = description || 'Découvrez Food en K, le food truck spécialisé dans les burgers artisanaux et les produits locaux. Réservez votre événement et savourez nos créations uniques.'
     const imageUrl = image ? `${siteUrl}${image}` : `${siteUrl}/img/og-default.jpg`
     const canonicalUrl = canonical || `${siteUrl}${route.path}`

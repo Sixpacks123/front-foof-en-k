@@ -15,7 +15,7 @@ useHead({
   }
 })
 
-const title = 'Food en K - Food Truck Burger Artisanal'
+const title = 'Food en K - Food Truck Burger'
 const description = 'Découvrez Food en K, le food truck spécialisé dans les burgers artisanaux et les produits locaux. Réservez votre événement et savourez nos créations uniques.'
 
 useSeoMeta({
