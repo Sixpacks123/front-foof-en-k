@@ -11,28 +11,9 @@
             color="primary"
             variant="soft"
           >
-   // Vérifier si un emplacement est ouvert maintenant
-const isLocationOpen = (location: Location): boolean => {
-  if (!location.start_time || !location.end_time) return false
-  
-  const now = new Date()
-  const currentTime = now.getHours() * 60 + now.getMinutes()
-  
-  const startTimeParts = location.start_time.split(':').map(Number)
-  const endTimeParts = location.end_time.split(':').map(Number)
-  
-  const startHour = startTimeParts[0] || 0
-  const startMin = startTimeParts[1] || 0
-  const endHour = endTimeParts[0] || 0
-  const endMin = endTimeParts[1] || 0
-  
-  const startTime = startHour * 60 + startMin
-  const endTime = endHour * 60 + endMin
-  
-  return currentTime >= startTime && currentTime <= endTime
-}ations.length }} emplacement{{ locations.length > 1 ? 's' : '' }}
+            {{ locations.length }} emplacement{{ locations.length > 1 ? 's' : '' }}
           </UBadge>
-        </div>
+        </div>   
       </template>
 
       <div class="space-y-4">
@@ -117,7 +98,7 @@ const isLocationOpen = (location: Location): boolean => {
                   />
                   {{ isLocationOpen(location) ? 'Ouvert' : 'Fermé' }}
                 </UBadge>
-                
+
                 <!-- Statut actif -->
                 <UBadge
                   v-if="location.isActive"
@@ -127,7 +108,7 @@ const isLocationOpen = (location: Location): boolean => {
                 >
                   Actif
                 </UBadge>
-                
+
                 <!-- Distance si géolocalisé -->
                 <UBadge
                   v-if="location.distance"
@@ -197,7 +178,7 @@ const isLocationOpen = (location: Location): boolean => {
                 >
                   Itinéraire
                 </UButton>
-                
+
                 <UButton
                   v-if="location.phone"
                   size="sm"
@@ -228,7 +209,7 @@ const isLocationOpen = (location: Location): boolean => {
                   ]"
                 />
               </div>
-              
+
               <!-- Contenu desktop -->
               <div class="flex-1 min-w-0">
                 <div class="flex items-start justify-between mb-2">
@@ -257,7 +238,7 @@ const isLocationOpen = (location: Location): boolean => {
                       />
                       {{ isLocationOpen(location) ? 'Ouvert' : 'Fermé' }}
                     </UBadge>
-                    
+
                     <!-- Statut actif -->
                     <UBadge
                       v-if="location.isActive"
@@ -267,7 +248,7 @@ const isLocationOpen = (location: Location): boolean => {
                     >
                       Actif
                     </UBadge>
-                    
+
                     <!-- Distance si géolocalisé -->
                     <UBadge
                       v-if="location.distance"
@@ -337,7 +318,7 @@ const isLocationOpen = (location: Location): boolean => {
                   >
                     Itinéraire
                   </UButton>
-                  
+
                   <UButton
                     v-if="location.phone"
                     size="xs"
@@ -376,21 +357,21 @@ const { formatAddress, formatOpeningHours } = useLocations()
 // Fonction pour vérifier si un emplacement est ouvert maintenant
 const isLocationOpen = (location: Location): boolean => {
   if (!location.start_time || !location.end_time) return false
-  
+
   const now = new Date()
   const currentTime = now.getHours() * 60 + now.getMinutes()
-  
+
   const startTimeParts = location.start_time.split(':').map(Number)
   const endTimeParts = location.end_time.split(':').map(Number)
-  
+
   const startHour = startTimeParts[0] ?? 0
   const startMin = startTimeParts[1] ?? 0
   const endHour = endTimeParts[0] ?? 0
   const endMin = endTimeParts[1] ?? 0
-  
+
   const startTime = startHour * 60 + startMin
   const endTime = endHour * 60 + endMin
-  
+
   return currentTime >= startTime && currentTime <= endTime
 }
 
