@@ -3,7 +3,6 @@
     v-if="showBanner"
     title="Actualités importantes"
     color="error"
-    :to="isModalOpen ? undefined : '#'"
     @click="isModalOpen = true"
   />
   <!-- Modal avec toutes les alertes -->
@@ -41,26 +40,8 @@
 </template>
 
 <script setup lang="ts">
-const { infos, showBanner, bannerColor } = useInfo()
+const { infos, showBanner } = useInfo()
 const isModalOpen = ref(false)
-
-const modalTitle = computed(() => {
-  const count = infos.value.length
-  if (count === 0) return 'Aucune information'
-  if (count === 1) {
-    const info = infos.value[0]
-    if (info) {
-      switch (info.type) {
-        case 'error': return 'Erreur importante'
-        case 'warning': return 'Avertissement'
-        case 'success': return 'Information positive'
-        case 'info':
-        default: return 'Information'
-      }
-    }
-  }
-  return `${count} notifications importantes`
-})
 
 const getAlertColor = (type: string) => {
   switch (type) {

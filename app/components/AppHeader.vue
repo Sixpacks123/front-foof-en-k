@@ -26,10 +26,13 @@ const items = computed(() => [{
 <template>
   <UHeader>
     <template #left>
-      <NuxtLink to="/">
+      <NuxtLink
+        to="/"
+        aria-label="Retour à l'accueil - Food en K"
+      >
         <img
           src="/img/logo.png"
-          alt="Logo"
+          alt="Logo Food en K"
           class="h-24 w-auto"
         >
       </NuxtLink>

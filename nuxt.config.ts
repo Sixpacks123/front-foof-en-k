@@ -54,6 +54,14 @@ export default defineNuxtConfig({
     transpile: ['@headlessui/vue']
   },
 
+  // =====================================
+  // TYPE SAFETY
+  // =====================================
+  routeRules: {
+    '/': { prerender: true },
+    '/sitemap': { prerender: true }
+  },
+
   optimization: {
     keyedComposables: [
       {
@@ -92,11 +100,6 @@ export default defineNuxtConfig({
       wasm: true
     }
   },
-
-  // =====================================
-  // TYPE SAFETY
-  // =====================================
-
   typescript: {
     strict: true,
     typeCheck: true
@@ -174,6 +177,7 @@ export default defineNuxtConfig({
       '/contact',
       '/emplacements',
       '/events',
+      '/sitemap',
       '/mentions-legales',
       '/politique-confidentialite'
     ]
