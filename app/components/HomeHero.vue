@@ -1,7 +1,7 @@
 <template>
   <UPageHero
     title="Food en'K"
-    description="🍔 Food truck de burgers artisanaux, traiteur et événementiel. Nous proposons des recettes uniques et savoureuses, préparées avec des ingrédients frais et locaux."
+    description="Food truck de burgers artisanaux, traiteur et événementiel. Nous proposons des recettes uniques et savoureuses, préparées avec des ingrédients frais et locaux."
     headline="🔥 Nouveau Site web"
     orientation="horizontal"
     :links="[
@@ -15,7 +15,7 @@
       },
       {
         label: 'Où nous trouver ?',
-        to: '/contact',
+        to: '/emplacements',
         icon: 'i-lucide-map-pin',
         size: 'xl',
         variant: 'outline',

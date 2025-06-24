@@ -1,10 +1,15 @@
 <template>
-  <UBanner
+  <div
     v-if="showBanner"
-    title="Actualités importantes"
-    color="error"
+    class="cursor-pointer"
     @click="isModalOpen = true"
-  />
+  >
+    <UBanner
+      title="Actualités importantes"
+      color="error"
+      icon="i-lucide-info"
+    />
+  </div>
   <!-- Modal avec toutes les alertes -->
   <UModal v-model:open="isModalOpen">
     <template #content>
