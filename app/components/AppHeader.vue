@@ -35,9 +35,7 @@ const items = computed(() => [{
         <NuxtImg
           src="/img/logo.png"
           alt="Logo Food en K"
-          class="h-8 w-auto"
-          width="120"
-          height="32"
+          class="h-24 w-auto"
           format="webp"
           loading="lazy"
           placeholder="blur"
