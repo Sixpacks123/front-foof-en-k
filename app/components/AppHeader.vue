@@ -43,7 +43,6 @@ const items = computed(() => [{
           placeholder="blur"
           quality="80"
         />
-        />
       </NuxtLink>
     </template>
 
