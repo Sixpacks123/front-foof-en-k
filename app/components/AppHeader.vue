@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { NuxtImg } from '#components';
+
 const route = useRoute()
 
 const items = computed(() => [{
@@ -30,11 +32,18 @@ const items = computed(() => [{
         to="/"
         aria-label="Retour à l'accueil - Food en K"
       >
-        <img
+        <NuxtImg
           src="/img/logo.png"
           alt="Logo Food en K"
-          class="h-24 w-auto"
-        >
+          class="h-8 w-auto"
+          width="120"
+          height="32"
+          format="webp"
+          loading="lazy"
+          placeholder="blur"
+          quality="80"
+        />
+        />
       </NuxtLink>
     </template>
 
