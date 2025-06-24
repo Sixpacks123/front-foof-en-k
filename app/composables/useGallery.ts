@@ -25,11 +25,6 @@ export const useGallery = () => {
       alt: 'Double burger au bacon'
     },
     {
-      id: 5,
-      url: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=640&h=640&fit=crop',
-      alt: 'Burger au poulet croustillant'
-    },
-    {
       id: 6,
       url: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=640&h=640&fit=crop',
       alt: 'Burger BBQ signature'

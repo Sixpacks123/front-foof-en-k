@@ -23,4 +23,3 @@ const { images } = useGallery()
     </div>
   </UCarousel>
 </template>
-
